@@ -23,7 +23,7 @@ body {
   flex-wrap: wrap;
   z-index: 5;
 }
-.navbar ul,
+.navbar div,
 .homepagelink,
 .login,
 .logoutlink {
@@ -41,7 +41,7 @@ body {
 .navbar .right li {
   display: block;
   padding: 14px 10px;
-  margin: 0;
+  margin: 0 1px;
   cursor: pointer;
 }
 .navbar .left li:hover,
@@ -87,7 +87,7 @@ body {
   background-image: url("./images/hotel background.jpg");
   background-repeat: no-repeat;
   background-size: cover;
-  opacity: 0.8;
+  opacity: 1;
   height: 500px;
   width: 100%;
   display: flex;
@@ -103,6 +103,9 @@ body {
   font-weight: 700;
   color: rgb(255, 238, 0);
   text-align: center;
+  text-shadow: 5px 5px 6px rgba(0, 0, 0, 0.7);
+  -webkit-text-stroke: 2px black;
+  z-index: 2;
 }
 .class1_p1,
 .class1_p2 {
@@ -137,7 +140,6 @@ body {
 }
 .hotelimage {
   display: inline;
-  /* height: 200px; */
   width: 200px;
   border-radius: 20px;
 }
@@ -973,7 +975,7 @@ input:disabled {
   font-size: 18px;
   margin-top: 10px;
 }
- 
+
 .stripe .card-element {
   border: 1px solid #cccccc;
   padding: 10px;

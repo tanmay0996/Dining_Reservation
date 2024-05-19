@@ -62,12 +62,12 @@ const Navbar = () => {
   }
 
   return (
-    <ul className="navbar">
-      <ul className="left">
+    <div className="navbar">
+      <div className="left">
         <li>Book your Table!</li>
         <li onClick={() => navigate("/")}>Home Page</li>
-      </ul>
-      <ul className="right">
+      </div>
+      <div className="right">
         <>
           {!curruser ? (
             <>
@@ -104,8 +104,8 @@ const Navbar = () => {
             </>
           )}
         </>
-      </ul>
-    </ul>
+      </div>
+    </div>
   );
 };
 

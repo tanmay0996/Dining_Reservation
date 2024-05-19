@@ -18,7 +18,6 @@ function Homepage() {
 
   useEffect(() => {
     gethotels();
-
   }, []);
 
   async function searchhotels(event) {
@@ -58,7 +57,6 @@ function Homepage() {
     result = await result.json();
     console.log("here");
 
-    
     let username = result.info.username;
     setCurruser(username);
     setIsuser(true);
