@@ -17,7 +17,6 @@ import ManagerSignup from "./components/ManagerSignUp";
 import ManagerProfile from "./components/ManagerProfile";
 import ManagerForgotPassword from "./components/ManagerForgotPassword";
 import AddHotel from "./components/AddHotel";
-import SuccessfulPayment from "./components/SuccessfulPayment";
 import UnsuccessfulPayment from "./components/UnsuccessfulPayment";
 import NotFound from "./components/NotFound";
 
@@ -43,10 +42,6 @@ const App = () => {
             <Route
               path="/managerforgotpassword"
               element={<ManagerForgotPassword />}
-            />
-            <Route
-              path="/success/:id/:tableselected/:slotselected"
-              element={<SuccessfulPayment />}
             />
             <Route
               path="/cancel/:id/:tableselected/:slotselected"
