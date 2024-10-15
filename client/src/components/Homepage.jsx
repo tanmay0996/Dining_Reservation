@@ -34,7 +34,7 @@ function Homepage() {
 
       result = await result.json();
       // sethotels(result);
-      // console.log("hotels are : ", hotels);
+      console.log("hotels are : ", hotels);
       if (result.hotels) {
         sethotels(result.hotels);
       } else {

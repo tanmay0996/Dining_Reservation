@@ -31,6 +31,8 @@ function BookTable() {
         tableSelected,
         slotSelected,
         curruseremail,
+        price:500,
+        image_url:`${hotel.image1}`,
       }),
       credentials: "include",
     });

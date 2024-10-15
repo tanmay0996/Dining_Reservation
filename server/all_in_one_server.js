@@ -14,8 +14,7 @@ const Users = require("./models/Users.js");
 const Bookings = require("./models/Bookings.js");
 const Managers = require("./models/Manager.js");
 const Manager = require("./models/Manager.js");
-const updatetablesMiddleware = require("./middleware/updatetablesMiddleware");
-
+// const updatetablesMiddleware = require("./middleware/updatetablesMiddleware");
 const secretKey = process.env.secretKey;
 const managersecretKey = process.env.managersecretKey;
 const stripe = require("stripe")(process.env.REACT_APP_STRIPE_SECRET_KEY);
@@ -954,36 +953,36 @@ app.post("/manager/:id/addhotel", cors(corsOptions), async (req, res) => {
   }
 });
 
-// async function updatetables() {
-//   const today = new Date().toLocaleDateString();
-//   const currentDate = today.split(",")[0];
+async function updatetables() {
+  const today = new Date().toLocaleDateString();
+  const currentDate = today.split(",")[0];
 
-//   let hotels = await Hotels.find();
-//   for (let hotel of hotels) {
-//     if (hotel.lastupdated !== currentDate) {
-//       let time = hotel.time;
-//       time = time.split(" - ");
-//       let starttime = time[0],
-//         endtime = time[1];
-//       let Available_Slots = makestring(starttime, endtime, hotel.no_of_tables);
+  let hotels = await Hotels.find();
+  for (let hotel of hotels) {
+    if (hotel.lastupdated !== currentDate) {
+      let time = hotel.time;
+      time = time.split(" - ");
+      let starttime = time[0],
+        endtime = time[1];
+      let Available_Slots = makestring(starttime, endtime, hotel.no_of_tables);
 
-//       await Hotels.updateOne(
-//         { _id: hotel._id },
-//         { lastupdated: currentDate, Available_Slots }
-//       );
-//     }
-//   }
-// }
+      await Hotels.updateOne(
+        { _id: hotel._id },
+        { lastupdated: currentDate, Available_Slots }
+      );
+    }
+  }
+}
 
-// async function updatetablesMiddleware(req, res, next) {
-//   try {
-//     await updatetables();
-//     next();
-//   } catch (error) {
-//     console.error("Error updating tables:", error);
-//     res.status(500).json({ error: "Internal Server Error" });
-//   }
-// }
+async function updatetablesMiddleware(req, res, next) {
+  try {
+    await updatetables();
+    next();
+  } catch (error) {
+    console.error("Error updating tables:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+}
 
 app.use((req, res, next) => {
   res.status(404).json({ error_not_found: "page not found" });
