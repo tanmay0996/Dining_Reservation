@@ -15,7 +15,9 @@ const Bookings = require("./models/Bookings.js");
 const Managers = require("./models/Manager.js");
 const Manager = require("./models/Manager.js");
 const updatetablesMiddleware = require("./middleware/updatetablesMiddleware");
-
+const formthestring = require("./utils/formthestring.js");
+const makestring = require("./utils/makestring.js");
+const select_tables_slots = require("./utils/select_tables_slots.js");
 const secretKey = process.env.secretKey;
 const managersecretKey = process.env.managersecretKey;
 const stripe = require("stripe")(process.env.REACT_APP_STRIPE_SECRET_KEY);
@@ -42,91 +44,96 @@ mongoose
     console.log("Database connection Error");
   });
 
-app.post("/", async (req, res) => {
-  try {
-    console.log("getting req");
+const hotelRoutes = require("./routes/hotelRoutes");
+const userRoutes = require("./routes/userRoutes.js");
+app.use("/", hotelRoutes);
+app.use("/hotel", hotelRoutes);
+app.use("/", userRoutes);
+// app.post("/", async (req, res) => {
+//   try {
+//     console.log("getting req");
 
-    let { hotelsearch } = req.body;
+//     let { hotelsearch } = req.body;
 
-    let hotels;
-    if (hotelsearch) {
-      hotels = await Hotels.find({
-        $or: [
-          { name: { $regex: hotelsearch } },
-          { address: { $regex: hotelsearch } },
-        ],
-      });
-    } else {
-      hotels = await Hotels.find();
-    }
+//     let hotels;
+//     if (hotelsearch) {
+//       hotels = await Hotels.find({
+//         $or: [
+//           { name: { $regex: hotelsearch } },
+//           { address: { $regex: hotelsearch } },
+//         ],
+//       });
+//     } else {
+//       hotels = await Hotels.find();
+//     }
 
-    if (hotels.length) {
-      res.status(200).json({ info: "hi", hotels });
-    } else {
-      res.status(400).json({ Error: "No hotel found" });
-    }
-  } catch (e) {
-    res.json({ error: "Something Went Wrong" });
-  }
-});
+//     if (hotels.length) {
+//       res.status(200).json({ info: "hi", hotels });
+//     } else {
+//       res.status(400).json({ Error: "No hotel found" });
+//     }
+//   } catch (e) {
+//     res.json({ error: "Something Went Wrong" });
+//   }
+// });
 
-function select_tables_slots(hotel) {
-  let tableavailable = [],
-    slots = "";
+// function select_tables_slots(hotel) {
+//   let tableavailable = [],
+//     slots = "";
 
-  if (hotel && hotel.Available_Slots) {
-    slots = hotel.Available_Slots;
-    slots = slots.split(",").map((slt) => slt.trim());
+//   if (hotel && hotel.Available_Slots) {
+//     slots = hotel.Available_Slots;
+//     slots = slots.split(",").map((slt) => slt.trim());
 
-    let c = 0;
-    for (let slot of slots) {
-      if (slot) {
-        tableavailable.push(c + 1);
-        let newslot = slot.split(";").map((slt) => slt.trim());
+//     let c = 0;
+//     for (let slot of slots) {
+//       if (slot) {
+//         tableavailable.push(c + 1);
+//         let newslot = slot.split(";").map((slt) => slt.trim());
 
-        slots[c] = newslot;
-      }
-      c++;
-    }
-  }
+//         slots[c] = newslot;
+//       }
+//       c++;
+//     }
+//   }
 
-  let result = {
-    hotel: hotel,
-    slots: slots,
-    tableavailable: tableavailable,
-  };
-  return result;
-}
+//   let result = {
+//     hotel: hotel,
+//     slots: slots,
+//     tableavailable: tableavailable,
+//   };
+//   return result;
+// }
 
-app.get("/hotel/:id", async (req, res) => {
-  try {
-    let id = req.params.id;
-    let hotel = await Hotels.findOne({ _id: id });
+// app.get("/hotel/:id", async (req, res) => {
+//   try {
+//     let id = req.params.id;
+//     let hotel = await Hotels.findOne({ _id: id });
 
-    result = select_tables_slots(hotel);
+//     result = select_tables_slots(hotel);
 
-    res.status(200).json(result);
-  } catch (e) {
-    console.log(e);
-    res.json({ error: "Something Went Wrong" });
-  }
-});
+//     res.status(200).json(result);
+//   } catch (e) {
+//     console.log(e);
+//     res.json({ error: "Something Went Wrong" });
+//   }
+// });
 
-function formthestring(slots) {
-  let newslot = "";
-  for (let i of slots) {
-    for (let j of i) {
-      newslot += j;
-      newslot += ";";
-    }
-    if (i !== "") {
-      newslot = newslot.slice(0, -1);
-    }
-    newslot += ",";
-  }
+// function formthestring(slots) {
+//   let newslot = "";
+//   for (let i of slots) {
+//     for (let j of i) {
+//       newslot += j;
+//       newslot += ";";
+//     }
+//     if (i !== "") {
+//       newslot = newslot.slice(0, -1);
+//     }
+//     newslot += ",";
+//   }
 
-  return newslot;
-}
+//   return newslot;
+// }
 
 app.post("/payment", async (req, res) => {
   try {
@@ -253,6 +260,8 @@ app.post("/hotel/:id/book", async (req, res) => {
   }
 });
 
+// const bookingRoutes = require("./routes/bookingRoutes.js");
+// app.use("/", bookingRoutes);
 app.get("/user/:id/booked/:id1", async (req, res) => {
   try {
     const { token } = req.cookies;
@@ -307,81 +316,81 @@ app.post("/profile", (req, res) => {
   }
 });
 
-app.post("/usersignup", async (req, res) => {
-  try {
-    const { username, email, pwd, phn } = req.body;
-    if (!username || !email || !phn || !pwd) {
-      return res.status(400).json({ error: "Fill Up the form" });
-    }
+// app.post("/usersignup", async (req, res) => {
+//   try {
+//     const { username, email, pwd, phn } = req.body;
+//     if (!username || !email || !phn || !pwd) {
+//       return res.status(400).json({ error: "Fill Up the form" });
+//     }
 
-    const salt = await bcrypt.genSalt(12);
-    const hash = await bcrypt.hash(req.body.pwd, salt);
-    req.body.pwd = hash;
+//     const salt = await bcrypt.genSalt(12);
+//     const hash = await bcrypt.hash(req.body.pwd, salt);
+//     req.body.pwd = hash;
 
-    let doexists = await Users.findOne({ email });
-    if (doexists) {
-      return res.status(400).json({ error: "User Exists" });
-    }
+//     let doexists = await Users.findOne({ email });
+//     if (doexists) {
+//       return res.status(400).json({ error: "User Exists" });
+//     }
 
-    let user = await Users.create(req.body);
-    const token = jwt.sign(
-      { userId: user._id, username: user.username, email: user.email },
-      secretKey
-    );
+//     let user = await Users.create(req.body);
+//     const token = jwt.sign(
+//       { userId: user._id, username: user.username, email: user.email },
+//       secretKey
+//     );
 
-    return res
-      .status(200)
-      .cookie("token", token, {
-        httpOnly: true,
-        sameSite: "None",
-        secure: true,
-      })
-      .json({ userId: user._id, username: user.username, email: user.email });
-  } catch (e) {
-    res.json({ error: "Something Went Wrong" });
-  }
-});
+//     return res
+//       .status(200)
+//       .cookie("token", token, {
+//         httpOnly: true,
+//         sameSite: "None",
+//         secure: true,
+//       })
+//       .json({ userId: user._id, username: user.username, email: user.email });
+//   } catch (e) {
+//     res.json({ error: "Something Went Wrong" });
+//   }
+// });
 
-app.post("/userlogin", async (req, res) => {
-  try {
-    const { email, pwd } = req.body;
-    if (!email || !pwd) {
-      return res.status(400).json({ error: "Fill Up the form" });
-    }
+// app.post("/userlogin", async (req, res) => {
+//   try {
+//     const { email, pwd } = req.body;
+//     if (!email || !pwd) {
+//       return res.status(400).json({ error: "Fill Up the form" });
+//     }
 
-    const user = await Users.findOne({ email });
+//     const user = await Users.findOne({ email });
 
-    if (user) {
-      const result = await bcrypt.compare(pwd, user.pwd);
+//     if (user) {
+//       const result = await bcrypt.compare(pwd, user.pwd);
 
-      if (result) {
-        const token = jwt.sign(
-          { userId: user._id, username: user.username, email: user.email },
-          secretKey
-        );
+//       if (result) {
+//         const token = jwt.sign(
+//           { userId: user._id, username: user.username, email: user.email },
+//           secretKey
+//         );
 
-        res
-          .cookie("token", token, {
-            httpOnly: true,
-            sameSite: "None",
-            secure: true,
-          })
-          .json({
-            userId: user._id,
-            username: user.username,
-            email: user.email,
-          });
-      } else {
-        return res.status(401).json({ error: "Incorrect password" });
-      }
-    } else {
-      return res.status(404).json({ error: "User not found" });
-    }
-  } catch (e) {
-    console.log(e);
-    res.json({ error: "Something Went Wrong" });
-  }
-});
+//         res
+//           .cookie("token", token, {
+//             httpOnly: true,
+//             sameSite: "None",
+//             secure: true,
+//           })
+//           .json({
+//             userId: user._id,
+//             username: user.username,
+//             email: user.email,
+//           });
+//       } else {
+//         return res.status(401).json({ error: "Incorrect password" });
+//       }
+//     } else {
+//       return res.status(404).json({ error: "User not found" });
+//     }
+//   } catch (e) {
+//     console.log(e);
+//     res.json({ error: "Something Went Wrong" });
+//   }
+// });
 
 app.post("/logout", async (req, res) => {
   try {
@@ -781,25 +790,25 @@ app.post("/managerforgotpassword", async (req, res) => {
   }
 });
 
-function makestring(starttime, endtime, no_of_tables) {
-  let Available_Slots = "";
+// function makestring(starttime, endtime, no_of_tables) {
+//   let Available_Slots = "";
 
-  for (let k = 1; k <= no_of_tables; k++) {
-    let i = parseInt(starttime) + 1,
-      j = parseInt(endtime);
-    let str = "";
-    while (i <= j) {
-      str += (i - 1).toString() + "-" + i.toString() + ";";
-      i++;
-    }
-    str = str.slice(0, -1);
-    str += ",";
-    Available_Slots += str;
-  }
+//   for (let k = 1; k <= no_of_tables; k++) {
+//     let i = parseInt(starttime) + 1,
+//       j = parseInt(endtime);
+//     let str = "";
+//     while (i <= j) {
+//       str += (i - 1).toString() + "-" + i.toString() + ";";
+//       i++;
+//     }
+//     str = str.slice(0, -1);
+//     str += ",";
+//     Available_Slots += str;
+//   }
 
-  Available_Slots = Available_Slots.slice(0, -1);
-  return Available_Slots;
-}
+//   Available_Slots = Available_Slots.slice(0, -1);
+//   return Available_Slots;
+// }
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
