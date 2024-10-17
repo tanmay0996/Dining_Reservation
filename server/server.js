@@ -46,9 +46,14 @@ mongoose
 
 const hotelRoutes = require("./routes/hotelRoutes");
 const userRoutes = require("./routes/userRoutes.js");
+const bookingRoutes = require("./routes/bookingRoutes.js");
+const managerRoutes = require("./routes/managerRoutes.js");
+
 app.use("/", hotelRoutes);
 app.use("/hotel", hotelRoutes);
 app.use("/", userRoutes);
+app.use("/", managerRoutes);
+app.use("/", bookingRoutes);
 // app.post("/", async (req, res) => {
 //   try {
 //     console.log("getting req");
@@ -135,163 +140,164 @@ app.use("/", userRoutes);
 //   return newslot;
 // }
 
-app.post("/payment", async (req, res) => {
-  try {
-    const { token } = req.cookies;
-    jwt.verify(token, secretKey, {}, async (err, info) => {
-      if (err) {
-        throw err;
-      }
+// app.post("/payment", async (req, res) => {
+//   try {
+//     const { token } = req.cookies;
+//     jwt.verify(token, secretKey, {}, async (err, info) => {
+//       if (err) {
+//         throw err;
+//       }
 
-      const {
-        hotelname,
-        hotel,
-        tableSelected,
-        slotSelected,
-        curruseremail,
-        price,
-      } = req.body;
+//       const {
+//         hotelname,
+//         hotel,
+//         tableSelected,
+//         slotSelected,
+//         curruseremail,
+//         price,
+//       } = req.body;
 
-      const id = hotel._id;
-      // const hotelImageUrl = `http://localhost:3000/images/${hotel.image1}`;
-      // console.log(hotel.image1);
-      const lineItems = [
-        {
-          price_data: {
-            currency: "inr",
-            product_data: {
-              name: hotelname,
-              description: `Dining reservation at ${hotelname} for Table ${tableSelected}, Slot ${slotSelected}`,
-              // images:[hotelImageUrl],
-              metadata: {
-                table: tableSelected,
-                slot: slotSelected,
-              },
-            },
-            unit_amount: price * 100,
-          },
-          quantity: 1,
-        },
-      ];
+//       const id = hotel._id;
+//       // const hotelImageUrl = `http://localhost:3000/images/${hotel.image1}`;
+//       // console.log(hotel.image1);
+//       const lineItems = [
+//         {
+//           price_data: {
+//             currency: "inr",
+//             product_data: {
+//               name: hotelname,
+//               description: `Dining reservation at ${hotelname} for Table ${tableSelected}, Slot ${slotSelected}`,
+//               // images:[hotelImageUrl],
+//               metadata: {
+//                 table: tableSelected,
+//                 slot: slotSelected,
+//               },
+//             },
+//             unit_amount: price * 100,
+//           },
+//           quantity: 1,
+//         },
+//       ];
 
-      const session = await stripe.checkout.sessions.create({
-        payment_method_types: ["card"],
-        line_items: lineItems,
-        mode: "payment",
-        locale: "en",
-        success_url: `http://localhost:5001/success?id=${id}&tableSelected=${tableSelected}&slotSelected=${slotSelected}&curruseremail=${encodeURIComponent(
-          curruseremail
-        )}&token=${encodeURIComponent(token)}`,
-        cancel_url: `http://localhost:3000/cancel/${id}/${tableSelected}/${slotSelected}`,
-      });
+//       const session = await stripe.checkout.sessions.create({
+//         payment_method_types: ["card"],
+//         line_items: lineItems,
+//         mode: "payment",
+//         locale: "en",
+//         success_url: `http://localhost:5001/success?id=${id}&tableSelected=${tableSelected}&slotSelected=${slotSelected}&curruseremail=${encodeURIComponent(
+//           curruseremail
+//         )}&token=${encodeURIComponent(token)}`,
+//         cancel_url: `http://localhost:3000/cancel/${id}/${tableSelected}/${slotSelected}`,
+//       });
 
-      res.status(200).json({ id: session.id });
-    });
-  } catch (e) {
-    console.error(e);
-    res.status(500).send("Internal Server Error");
-  }
-});
+//       res.status(200).json({ id: session.id });
+//     });
+//   } catch (e) {
+//     console.error(e);
+//     res.status(500).send("Internal Server Error");
+//   }
+// });
 
-app.post("/hotel/:id/book", async (req, res) => {
-  try {
-    // const { token } = req.cookies;
-    // jwt.verify(token, secretKey, {}, async (err2, info2) => {
-    //   if (err2) {
-    //     throw err2;
-    //   }
+// app.post("/hotel/:id/book", async (req, res) => {
+//   try {
+//     // const { token } = req.cookies;
+//     // jwt.verify(token, secretKey, {}, async (err2, info2) => {
+//     //   if (err2) {
+//     //     throw err2;
+//     //   }
 
-    // console.log("token verified at the booking of table");
+//     // console.log("token verified at the booking of table");
 
-    const { hotel, tableSelected, slotSelected, curruseremail } = req.body;
+//     const { hotel, tableSelected, slotSelected, curruseremail } = req.body;
 
-    let myhotel = await Hotels.findOne({ _id: req.params.id });
-    let result = select_tables_slots(myhotel);
+//     let myhotel = await Hotels.findOne({ _id: req.params.id });
+//     let result = select_tables_slots(myhotel);
 
-    result.slots[tableSelected - 1] = result.slots[tableSelected - 1].filter(
-      (val) => {
-        return val !== slotSelected;
-      }
-    );
+//     result.slots[tableSelected - 1] = result.slots[tableSelected - 1].filter(
+//       (val) => {
+//         return val !== slotSelected;
+//       }
+//     );
 
-    if (result.slots[tableSelected - 1].length === 0)
-      result.slots[tableSelected - 1] = "";
+//     if (result.slots[tableSelected - 1].length === 0)
+//       result.slots[tableSelected - 1] = "";
 
-    let newslot = formthestring(result.slots);
+//     let newslot = formthestring(result.slots);
 
-    await Hotels.findOneAndUpdate(
-      { _id: req.params.id },
-      {
-        $set: {
-          Available_Slots: newslot,
-        },
-      }
-    );
+//     await Hotels.findOneAndUpdate(
+//       { _id: req.params.id },
+//       {
+//         $set: {
+//           Available_Slots: newslot,
+//         },
+//       }
+//     );
 
-    let userid;
-    let user = await Users.findOne({ email: curruseremail });
-    if (user) {
-      userid = user._id;
-    }
+//     let userid;
+//     let user = await Users.findOne({ email: curruseremail });
+//     if (user) {
+//       userid = user._id;
+//     }
 
-    const currentDate = new Date().toLocaleDateString();
+//     const currentDate = new Date().toLocaleDateString();
 
-    let booking = {
-      userId: userid,
-      email: user.email,
-      username: user.username,
-      hotelId: myhotel._id,
-      hotelname: myhotel.name,
-      hoteladdress: myhotel.address,
-      date: `${currentDate}`,
-      table: tableSelected,
-      slot: slotSelected,
-    };
+//     let booking = {
+//       userId: userid,
+//       email: user.email,
+//       username: user.username,
+//       hotelId: myhotel._id,
+//       hotelname: myhotel.name,
+//       hoteladdress: myhotel.address,
+//       date: `${currentDate}`,
+//       table: tableSelected,
+//       slot: slotSelected,
+//     };
 
-    booking = new Bookings(booking);
+//     booking = new Bookings(booking);
 
-    let result2 = await booking.save();
+//     let result2 = await booking.save();
 
-    res.status(200).json({ id: result2._id });
-    // });
-  } catch (e) {
-    console.log(e);
-    res.json({ error: "Something Went Wrong" });
-  }
-});
+//     res.status(200).json({ id: result2._id });
+//     // });
+//   } catch (e) {
+//     console.log(e);
+//     res.json({ error: "Something Went Wrong" });
+//   }
+// });
 
 // const bookingRoutes = require("./routes/bookingRoutes.js");
 // app.use("/", bookingRoutes);
-app.get("/user/:id/booked/:id1", async (req, res) => {
-  try {
-    const { token } = req.cookies;
-    jwt.verify(token, secretKey, {}, async (err2, info2) => {
-      if (err2) {
-        if (
-          err2.name === "JsonWebTokenError" &&
-          (err2.message === "jwt malformed" ||
-            err2.message === "invalid signature")
-        ) {
-          return res.redirect("http://localhost:3000");
-        } else throw err2;
-      }
-      console.log("Token verified at /booked/:id");
 
-      let bookingid = req.params.id1;
-      let result = await Bookings.findOne({ _id: bookingid });
+// app.get("/user/:id/booked/:id1", async (req, res) => {
+//   try {
+//     const { token } = req.cookies;
+//     jwt.verify(token, secretKey, {}, async (err2, info2) => {
+//       if (err2) {
+//         if (
+//           err2.name === "JsonWebTokenError" &&
+//           (err2.message === "jwt malformed" ||
+//             err2.message === "invalid signature")
+//         ) {
+//           return res.redirect("http://localhost:3000");
+//         } else throw err2;
+//       }
+//       console.log("Token verified at /booked/:id");
 
-      if (info2.userId === result.userId) {
-        res.status(200).json(result);
-      } else {
-        console.log("info2.userId !== result.userId");
-        res.status(401).json({ error: "Something went wrong" });
-      }
-    });
-  } catch (e) {
-    console.log(e);
-    res.json({ error: "Something Went Wrong" });
-  }
-});
+//       let bookingid = req.params.id1;
+//       let result = await Bookings.findOne({ _id: bookingid });
+
+//       if (info2.userId === result.userId) {
+//         res.status(200).json(result);
+//       } else {
+//         console.log("info2.userId !== result.userId");
+//         res.status(401).json({ error: "Something went wrong" });
+//       }
+//     });
+//   } catch (e) {
+//     console.log(e);
+//     res.json({ error: "Something Went Wrong" });
+//   }
+// });
 
 app.post("/profile", (req, res) => {
   try {
@@ -406,147 +412,148 @@ app.post("/logout", async (req, res) => {
   }
 });
 
-app.put("/user/:id", async (req, res) => {
-  try {
-    const { token } = req.cookies;
-    jwt.verify(token, secretKey, {}, async (err2, info2) => {
-      if (err2) {
-        throw err2;
-      }
+// app.put("/user/:id", async (req, res) => {
+//   try {
+//     const { token } = req.cookies;
+//     jwt.verify(token, secretKey, {}, async (err2, info2) => {
+//       if (err2) {
+//         throw err2;
+//       }
 
-      console.log("token verified at /user");
+//       console.log("token verified at /user");
 
-      let email = req.body.curruseremail;
-      let user = await Users.findOne({ email });
+//       let email = req.body.curruseremail;
+//       let user = await Users.findOne({ email });
 
-      let bookings = await Bookings.find({ email });
-      bookings = bookings.reverse();
+//       let bookings = await Bookings.find({ email });
+//       bookings = bookings.reverse();
 
-      res.json({ user, bookings });
-    });
-  } catch (error) {
-    console.error("Error fetching user:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
+//       res.json({ user, bookings });
+//     });
+//   } catch (error) {
+//     console.error("Error fetching user:", error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
 
-app.post("/user/:id", async (req, res) => {
-  try {
-    let { token } = req.cookies;
+// app.post("/user/:id", async (req, res) => {
+//   try {
+//     let { token } = req.cookies;
 
-    jwt.verify(token, secretKey, {}, async (err2, info2) => {
-      if (err2) {
-        throw err2;
-      }
+//     jwt.verify(token, secretKey, {}, async (err2, info2) => {
+//       if (err2) {
+//         throw err2;
+//       }
 
-      let email = req.body.curruseremail;
-      let user = await Users.findOne({ email });
+//       let email = req.body.curruseremail;
+//       let user = await Users.findOne({ email });
 
-      if (req.body.newpwd) {
-        const salt = await bcrypt.genSalt(12);
-        const hash = await bcrypt.hash(req.body.newpwd, salt);
-        req.body.newpwd = hash;
+//       if (req.body.newpwd) {
+//         const salt = await bcrypt.genSalt(12);
+//         const hash = await bcrypt.hash(req.body.newpwd, salt);
+//         req.body.newpwd = hash;
 
-        let result = await Users.findOneAndUpdate(
-          { email: email },
-          {
-            $set: {
-              username: req.body.newname,
-              pwd: req.body.newpwd,
+//         let result = await Users.findOneAndUpdate(
+//           { email: email },
+//           {
+//             $set: {
+//               username: req.body.newname,
+//               pwd: req.body.newpwd,
 
-              phn: req.body.newphn,
-            },
-          }
-        );
-      } else {
-        let result = await Users.findOneAndUpdate(
-          { email: email },
-          {
-            $set: {
-              username: req.body.newname,
-              phn: req.body.newphn,
-            },
-          }
-        );
-      }
+//               phn: req.body.newphn,
+//             },
+//           }
+//         );
+//       } else {
+//         let result = await Users.findOneAndUpdate(
+//           { email: email },
+//           {
+//             $set: {
+//               username: req.body.newname,
+//               phn: req.body.newphn,
+//             },
+//           }
+//         );
+//       }
 
-      const newtoken = jwt.sign(
-        { userId: user._id, username: req.body.newname, email: user.email },
-        secretKey
-      );
+//       const newtoken = jwt.sign(
+//         { userId: user._id, username: req.body.newname, email: user.email },
+//         secretKey
+//       );
 
-      res
-        .cookie("token", newtoken, {
-          httpOnly: true,
-          sameSite: "None",
-          secure: true,
-        })
-        .json({ name: req.body.newname });
-    });
-  } catch (e) {
-    console.error("Error fetching user:", e);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
+//       res
+//         .cookie("token", newtoken, {
+//           httpOnly: true,
+//           sameSite: "None",
+//           secure: true,
+//         })
+//         .json({ name: req.body.newname });
+//     });
+//   } catch (e) {
+//     console.error("Error fetching user:", e);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
 
-app.post("/userforgotpassword", async (req, res) => {
-  try {
-    const { email, pwd } = req.body;
+// app.post("/userforgotpassword", async (req, res) => {
+//   try {
+//     const { email, pwd } = req.body;
 
-    if (!email || !pwd) {
-      return res.status(400).json({ error: "Fill Up the form" });
-    } else {
-      let user = await Users.findOne({ email });
+//     if (!email || !pwd) {
+//       return res.status(400).json({ error: "Fill Up the form" });
+//     } else {
+//       let user = await Users.findOne({ email });
 
-      if (user) {
-        const salt = await bcrypt.genSalt(12);
-        const hash = await bcrypt.hash(req.body.pwd, salt);
-        req.body.newpwd = hash;
+//       if (user) {
+//         const salt = await bcrypt.genSalt(12);
+//         const hash = await bcrypt.hash(req.body.pwd, salt);
+//         req.body.newpwd = hash;
 
-        let result = await Users.findOneAndUpdate(
-          { email: email },
-          {
-            $set: {
-              pwd: req.body.newpwd,
-            },
-          }
-        );
-        res.status(200).json({ email: req.body.newemail });
-      } else {
-        res.status(404).json({ error: "User Not Found" });
-      }
-    }
-  } catch (e) {
-    console.error("Error fetching user:", e);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
+//         let result = await Users.findOneAndUpdate(
+//           { email: email },
+//           {
+//             $set: {
+//               pwd: req.body.newpwd,
+//             },
+//           }
+//         );
+//         res.status(200).json({ email: req.body.newemail });
+//       } else {
+//         res.status(404).json({ error: "User Not Found" });
+//       }
+//     }
+//   } catch (e) {
+//     console.error("Error fetching user:", e);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
 
-app.delete("/userdelete", async (req, res) => {
-  try {
-    const { token } = req.cookies;
-    jwt.verify(token, secretKey, {}, async (err, info) => {
-      if (err) {
-        throw err;
-      }
+// app.delete("/userdelete", async (req, res) => {
+//   try {
+//     const { token } = req.cookies;
+//     jwt.verify(token, secretKey, {}, async (err, info) => {
+//       if (err) {
+//         throw err;
+//       }
 
-      const email = req.body.curruseremail;
+//       const email = req.body.curruseremail;
 
-      let result = await Users.deleteOne({ email });
+//       let result = await Users.deleteOne({ email });
 
-      res
-        .cookie("token", " ", {
-          sameSite: "None",
-          secure: true,
-          expire: new Date(0),
-        })
-        .json(result);
-    });
-  } catch (e) {
-    console.log("Error:", e);
-    res.json({ Error: e });
-  }
-});
+//       res
+//         .cookie("token", " ", {
+//           sameSite: "None",
+//           secure: true,
+//           expire: new Date(0),
+//         })
+//         .json(result);
+//     });
+//   } catch (e) {
+//     console.log("Error:", e);
+//     res.json({ Error: e });
+//   }
+// });
+
 app.post("/profileofmanager", (req, res) => {
   try {
     const { token } = req.cookies;
@@ -561,234 +568,234 @@ app.post("/profileofmanager", (req, res) => {
   }
 });
 
-app.post("/managersignup", async (req, res) => {
-  try {
-    const { name, email, pwd, phn, address, aadhar, pan } = req.body;
+// app.post("/managersignup", async (req, res) => {
+//   try {
+//     const { name, email, pwd, phn, address, aadhar, pan } = req.body;
 
-    if (!name || !email || !phn || !pwd || !address || !aadhar || !pan) {
-      return res.status(400).json({ error: "Fill Up the form" });
-    }
+//     if (!name || !email || !phn || !pwd || !address || !aadhar || !pan) {
+//       return res.status(400).json({ error: "Fill Up the form" });
+//     }
 
-    const salt = await bcrypt.genSalt(12);
-    const hash = await bcrypt.hash(req.body.pwd, salt);
-    req.body.pwd = hash;
+//     const salt = await bcrypt.genSalt(12);
+//     const hash = await bcrypt.hash(req.body.pwd, salt);
+//     req.body.pwd = hash;
 
-    let doexists = await Managers.findOne({ email });
-    if (doexists) {
-      return res.status(400).json({ error: "Manager Exists" });
-    }
+//     let doexists = await Managers.findOne({ email });
+//     if (doexists) {
+//       return res.status(400).json({ error: "Manager Exists" });
+//     }
 
-    let manager = new Managers(req.body);
-    let result = await manager.save();
+//     let manager = new Managers(req.body);
+//     let result = await manager.save();
 
-    const token = jwt.sign(
-      {
-        managerId: manager._id,
-        managername: manager.name,
-        email: manager.email,
-      },
-      managersecretKey
-    );
+//     const token = jwt.sign(
+//       {
+//         managerId: manager._id,
+//         managername: manager.name,
+//         email: manager.email,
+//       },
+//       managersecretKey
+//     );
 
-    return res
-      .status(200)
-      .cookie("token", token, {
-        httpOnly: true,
-        sameSite: "None",
-        secure: true,
-      })
-      .json({
-        managerId: manager._id,
-        managername: manager.name,
-        email: manager.email,
-      });
-  } catch (e) {
-    res.json({ error: "Something Went Wrong" });
-  }
-});
+//     return res
+//       .status(200)
+//       .cookie("token", token, {
+//         httpOnly: true,
+//         sameSite: "None",
+//         secure: true,
+//       })
+//       .json({
+//         managerId: manager._id,
+//         managername: manager.name,
+//         email: manager.email,
+//       });
+//   } catch (e) {
+//     res.json({ error: "Something Went Wrong" });
+//   }
+// });
 
-app.post("/managerlogin", async (req, res) => {
-  try {
-    const { email, pwd } = req.body;
-    if (!email || !pwd) {
-      return res.status(400).json({ error: "Fill Up the form" });
-    }
+// app.post("/managerlogin", async (req, res) => {
+//   try {
+//     const { email, pwd } = req.body;
+//     if (!email || !pwd) {
+//       return res.status(400).json({ error: "Fill Up the form" });
+//     }
 
-    const manager = await Managers.findOne({ email });
+//     const manager = await Managers.findOne({ email });
 
-    if (manager) {
-      const result = await bcrypt.compare(pwd, manager.pwd);
+//     if (manager) {
+//       const result = await bcrypt.compare(pwd, manager.pwd);
 
-      if (result) {
-        const token = jwt.sign(
-          {
-            managerId: manager._id,
-            managername: manager.name,
-            email: manager.email,
-          },
-          managersecretKey
-        );
+//       if (result) {
+//         const token = jwt.sign(
+//           {
+//             managerId: manager._id,
+//             managername: manager.name,
+//             email: manager.email,
+//           },
+//           managersecretKey
+//         );
 
-        return res
-          .status(200)
-          .cookie("token", token, {
-            httpOnly: true,
-            sameSite: "None",
-            secure: true,
-          })
-          .json({
-            managerId: manager._id,
-            username: manager.name,
-            email: manager.email,
-          });
-      } else {
-        return res.status(401).json({ error: "Incorrect password" });
-      }
-    } else {
-      return res.status(404).json({ error: "Manager not found" });
-    }
-  } catch (e) {
-    res.json({ error: "Something Went Wrong" });
-  }
-});
+//         return res
+//           .status(200)
+//           .cookie("token", token, {
+//             httpOnly: true,
+//             sameSite: "None",
+//             secure: true,
+//           })
+//           .json({
+//             managerId: manager._id,
+//             username: manager.name,
+//             email: manager.email,
+//           });
+//       } else {
+//         return res.status(401).json({ error: "Incorrect password" });
+//       }
+//     } else {
+//       return res.status(404).json({ error: "Manager not found" });
+//     }
+//   } catch (e) {
+//     res.json({ error: "Something Went Wrong" });
+//   }
+// });
 
-app.put("/managerprofile/:id", async (req, res) => {
-  try {
-    const { token } = req.cookies;
-    jwt.verify(token, managersecretKey, {}, async (err, info) => {
-      if (err) {
-        console.log("Got the error");
-        throw err;
-      } else {
-        let email = info.email;
-        let hotelsearch = req.body.hotelsearch;
+// app.put("/managerprofile/:id", async (req, res) => {
+//   try {
+//     const { token } = req.cookies;
+//     jwt.verify(token, managersecretKey, {}, async (err, info) => {
+//       if (err) {
+//         console.log("Got the error");
+//         throw err;
+//       } else {
+//         let email = info.email;
+//         let hotelsearch = req.body.hotelsearch;
 
-        let manager = await Managers.findOne({ email });
+//         let manager = await Managers.findOne({ email });
 
-        let hotels;
-        if (hotelsearch) {
-          hotels = await Hotels.find({
-            $and: [
-              { managerId: manager._id },
-              {
-                $or: [
-                  { name: { $regex: hotelsearch } },
-                  { address: { $regex: hotelsearch } },
-                ],
-              },
-            ],
-          });
-        } else {
-          hotels = await Hotels.find({ managerId: manager._id });
-        }
+//         let hotels;
+//         if (hotelsearch) {
+//           hotels = await Hotels.find({
+//             $and: [
+//               { managerId: manager._id },
+//               {
+//                 $or: [
+//                   { name: { $regex: hotelsearch } },
+//                   { address: { $regex: hotelsearch } },
+//                 ],
+//               },
+//             ],
+//           });
+//         } else {
+//           hotels = await Hotels.find({ managerId: manager._id });
+//         }
 
-        res.json({ manager, hotels });
-      }
-    });
-  } catch (error) {
-    console.error("Error fetching user:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
+//         res.json({ manager, hotels });
+//       }
+//     });
+//   } catch (error) {
+//     console.error("Error fetching user:", error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
 
-app.post("/managerprofile/:id", async (req, res) => {
-  try {
-    const { token } = req.cookies;
-    jwt.verify(token, managersecretKey, {}, async (err, info) => {
-      if (err) throw err;
+// app.post("/managerprofile/:id", async (req, res) => {
+//   try {
+//     const { token } = req.cookies;
+//     jwt.verify(token, managersecretKey, {}, async (err, info) => {
+//       if (err) throw err;
 
-      let email = req.body.curruseremail;
-      let manager = await Manager.findOne({ email });
+//       let email = req.body.curruseremail;
+//       let manager = await Manager.findOne({ email });
 
-      if (req.body.newpwd) {
-        const salt = await bcrypt.genSalt(12);
-        const hash = await bcrypt.hash(req.body.newpwd, salt);
-        req.body.newpwd = hash;
+//       if (req.body.newpwd) {
+//         const salt = await bcrypt.genSalt(12);
+//         const hash = await bcrypt.hash(req.body.newpwd, salt);
+//         req.body.newpwd = hash;
 
-        let result = await Managers.findOneAndUpdate(
-          { email: email },
-          {
-            $set: {
-              name: req.body.newname,
+//         let result = await Managers.findOneAndUpdate(
+//           { email: email },
+//           {
+//             $set: {
+//               name: req.body.newname,
 
-              phn: req.body.newphn,
-              pwd: req.body.newpwd,
-              address: req.body.newaddress,
-              aadhar: req.body.newaadhar,
-              pan: req.body.newpan,
-            },
-          }
-        );
-      } else {
-        let result = await Managers.findOneAndUpdate(
-          { email: email },
-          {
-            $set: {
-              name: req.body.newname,
+//               phn: req.body.newphn,
+//               pwd: req.body.newpwd,
+//               address: req.body.newaddress,
+//               aadhar: req.body.newaadhar,
+//               pan: req.body.newpan,
+//             },
+//           }
+//         );
+//       } else {
+//         let result = await Managers.findOneAndUpdate(
+//           { email: email },
+//           {
+//             $set: {
+//               name: req.body.newname,
 
-              phn: req.body.newphn,
-              address: req.body.newaddress,
-              aadhar: req.body.newaadhar,
-              pan: req.body.newpan,
-            },
-          }
-        );
-      }
+//               phn: req.body.newphn,
+//               address: req.body.newaddress,
+//               aadhar: req.body.newaadhar,
+//               pan: req.body.newpan,
+//             },
+//           }
+//         );
+//       }
 
-      const newtoken = jwt.sign(
-        {
-          managerId: manager._id,
-          managername: req.body.newname,
-          email: manager.email,
-        },
-        managersecretKey
-      );
+//       const newtoken = jwt.sign(
+//         {
+//           managerId: manager._id,
+//           managername: req.body.newname,
+//           email: manager.email,
+//         },
+//         managersecretKey
+//       );
 
-      res
-        .cookie("token", newtoken, {
-          httpOnly: true,
-          sameSite: "None",
-          secure: true,
-        })
-        .json({ name: req.body.newname });
-    });
-  } catch (e) {
-    console.error("Error fetching user:", e);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
+//       res
+//         .cookie("token", newtoken, {
+//           httpOnly: true,
+//           sameSite: "None",
+//           secure: true,
+//         })
+//         .json({ name: req.body.newname });
+//     });
+//   } catch (e) {
+//     console.error("Error fetching user:", e);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
 
-app.post("/managerforgotpassword", async (req, res) => {
-  try {
-    let { email, pwd } = req.body;
-    if (!email || !pwd) {
-      res.status(400).json({ error: "Fill up the Form" });
-    } else {
-      let manager = await Managers.findOne({ email });
+// app.post("/managerforgotpassword", async (req, res) => {
+//   try {
+//     let { email, pwd } = req.body;
+//     if (!email || !pwd) {
+//       res.status(400).json({ error: "Fill up the Form" });
+//     } else {
+//       let manager = await Managers.findOne({ email });
 
-      if (manager) {
-        const salt = await bcrypt.genSalt(12);
-        const hash = await bcrypt.hash(req.body.pwd, salt);
-        req.body.newpwd = hash;
+//       if (manager) {
+//         const salt = await bcrypt.genSalt(12);
+//         const hash = await bcrypt.hash(req.body.pwd, salt);
+//         req.body.newpwd = hash;
 
-        let result = await Managers.findOneAndUpdate(
-          { email: email },
-          {
-            $set: {
-              pwd: req.body.newpwd,
-            },
-          }
-        );
-        res.status(200).json({ email: req.body.newemail });
-      } else {
-        res.status(400).json({ error: "Manager not Found" });
-      }
-    }
-  } catch (e) {
-    console.error("Error fetching user:", e);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
+//         let result = await Managers.findOneAndUpdate(
+//           { email: email },
+//           {
+//             $set: {
+//               pwd: req.body.newpwd,
+//             },
+//           }
+//         );
+//         res.status(200).json({ email: req.body.newemail });
+//       } else {
+//         res.status(400).json({ error: "Manager not Found" });
+//       }
+//     }
+//   } catch (e) {
+//     console.error("Error fetching user:", e);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
 
 // function makestring(starttime, endtime, no_of_tables) {
 //   let Available_Slots = "";

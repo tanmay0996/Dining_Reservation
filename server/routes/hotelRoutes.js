@@ -7,4 +7,6 @@ const {
 
 router.post("/", searchHotels);
 router.get("/hotel/:id", getHotelById);
+// router.post("/user/:id", Update_User_Info);
+
 module.exports = router;
