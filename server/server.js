@@ -2,25 +2,15 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
-const multer = require("multer");
 const path = require("path");
-const fs = require("fs");
 require("dotenv").config();
-const Hotels = require("./models/Hotels.js");
-const Users = require("./models/Users.js");
-const Bookings = require("./models/Bookings.js");
-const Managers = require("./models/Manager.js");
-const Manager = require("./models/Manager.js");
+
 const updatetablesMiddleware = require("./middleware/updatetablesMiddleware");
-const formthestring = require("./utils/formthestring.js");
-const makestring = require("./utils/makestring.js");
-const select_tables_slots = require("./utils/select_tables_slots.js");
+
 const secretKey = process.env.secretKey;
 const managersecretKey = process.env.managersecretKey;
-const stripe = require("stripe")(process.env.REACT_APP_STRIPE_SECRET_KEY);
 
 const port = process.env.PORT || 5000;
 
@@ -32,8 +22,16 @@ app.use(
     credentials: true,
   })
 );
-app.use(express.static("public"));
+
+// app.use(express.static("public"));
+app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
+// app.use(
+//   "/uploads",
+//   express.static("E:/React/Hotel Dining Reservation System/server/uploads")
+// );
+
 app.use(updatetablesMiddleware);
+app.use(express.urlencoded({ extended: true }));
 
 mongoose
   .connect("mongodb://127.0.0.1:27017/hotel_table_booking")
@@ -54,6 +52,66 @@ app.use("/hotel", hotelRoutes);
 app.use("/", userRoutes);
 app.use("/", managerRoutes);
 app.use("/", bookingRoutes);
+
+app.post("/profile", (req, res) => {
+  try {
+    const { token } = req.cookies;
+
+    jwt.verify(token, secretKey, {}, (err, info) => {
+      if (err) {
+        jwt.verify(token, managersecretKey, {}, (err2, info2) => {
+          if (err2) {
+            throw err2;
+          }
+          console.log("Info2 is ", info2);
+          res.json(info2);
+        });
+      } else {
+        console.log("from here, Info is ", info);
+        res.json(info);
+      }
+    });
+  } catch (e) {
+    res.json({ error: "Something Went Wrong" });
+  }
+});
+
+app.post("/profileofmanager", (req, res) => {
+  try {
+    const { token } = req.cookies;
+
+    jwt.verify(token, managersecretKey, {}, (err, info) => {
+      if (err) throw err;
+      console.log("Info is ", info);
+      res.json(info);
+    });
+  } catch (e) {
+    res.json({ error: "Something Went Wrong" });
+  }
+});
+
+app.post("/logout", async (req, res) => {
+  try {
+    res
+      .cookie("token", " ", {
+        sameSite: "None",
+        secure: true,
+        expire: new Date(0),
+      })
+      .json("ok");
+  } catch (e) {
+    res.json({ error: "Something Went Wrong" });
+  }
+});
+
+app.use((req, res, next) => {
+  res.status(404).json({ error_not_found: "page not found" });
+});
+
+app.listen(port, () => {
+  console.log(`Listening on Port ${port}`);
+});
+
 // app.post("/", async (req, res) => {
 //   try {
 //     console.log("getting req");
@@ -299,29 +357,6 @@ app.use("/", bookingRoutes);
 //   }
 // });
 
-app.post("/profile", (req, res) => {
-  try {
-    const { token } = req.cookies;
-
-    jwt.verify(token, secretKey, {}, (err, info) => {
-      if (err) {
-        jwt.verify(token, managersecretKey, {}, (err2, info2) => {
-          if (err2) {
-            throw err2;
-          }
-          console.log("Info2 is ", info2);
-          res.json(info2);
-        });
-      } else {
-        console.log("from here, Info is ", info);
-        res.json(info);
-      }
-    });
-  } catch (e) {
-    res.json({ error: "Something Went Wrong" });
-  }
-});
-
 // app.post("/usersignup", async (req, res) => {
 //   try {
 //     const { username, email, pwd, phn } = req.body;
@@ -397,20 +432,6 @@ app.post("/profile", (req, res) => {
 //     res.json({ error: "Something Went Wrong" });
 //   }
 // });
-
-app.post("/logout", async (req, res) => {
-  try {
-    res
-      .cookie("token", " ", {
-        sameSite: "None",
-        secure: true,
-        expire: new Date(0),
-      })
-      .json("ok");
-  } catch (e) {
-    res.json({ error: "Something Went Wrong" });
-  }
-});
 
 // app.put("/user/:id", async (req, res) => {
 //   try {
@@ -553,20 +574,6 @@ app.post("/logout", async (req, res) => {
 //     res.json({ Error: e });
 //   }
 // });
-
-app.post("/profileofmanager", (req, res) => {
-  try {
-    const { token } = req.cookies;
-
-    jwt.verify(token, managersecretKey, {}, (err, info) => {
-      if (err) throw err;
-      console.log("Info is ", info);
-      res.json(info);
-    });
-  } catch (e) {
-    res.json({ error: "Something Went Wrong" });
-  }
-});
 
 // app.post("/managersignup", async (req, res) => {
 //   try {
@@ -817,158 +824,159 @@ app.post("/profileofmanager", (req, res) => {
 //   return Available_Slots;
 // }
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "../client/public/images");
-  },
-  filename: async function (req, file, cb) {
-    const hotelId = req.body.hotelId;
-    const filename = `${hotelId}_${file.fieldname}.jpg`;
-    cb(null, filename);
-  },
-});
-const upload = multer({ storage: storage }).fields([
-  { name: "img1", maxCount: 1 },
-  { name: "img2", maxCount: 1 },
-]);
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, "../client/public/images");
+//   },
+//   filename: async function (req, file, cb) {
+//     const hotelId = req.body.hotelId;
+//     const filename = `${hotelId}_${file.fieldname}.jpg`;
+//     cb(null, filename);
+//   },
+// });
 
-const corsOptions = {
-  origin: "http://localhost:3000",
-  credentials: true,
-};
+// const upload = multer({ storage: storage }).fields([
+//   { name: "img1", maxCount: 1 },
+//   { name: "img2", maxCount: 1 },
+// ]);
 
-app.post("/manager/:id/addhotel", cors(corsOptions), async (req, res) => {
-  try {
-    const { token } = req.cookies;
-    jwt.verify(token, managersecretKey, {}, (err, info) => {
-      if (err) {
-        console.log("token verification error");
-        throw err;
-      }
+// const corsOptions = {
+//   origin: "http://localhost:3000",
+//   credentials: true,
+// };
 
-      console.log("token verified at manager.addhotel");
-      upload(req, res, async (err) => {
-        if (err instanceof multer.MulterError) {
-          if (err.code === "LIMIT_FILE_SIZE") {
-            return res.status(400).json({ error: "File size too large" });
-          }
-        } else if (err) {
-          console.error("File upload error:", err);
-          return res.status(500).json({ error: "File upload failed" });
-        }
+// app.post("/manager/:id/addhotel", cors(corsOptions), async (req, res) => {
+//   try {
+//     const { token } = req.cookies;
+//     jwt.verify(token, managersecretKey, {}, (err, info) => {
+//       if (err) {
+//         console.log("token verification error");
+//         throw err;
+//       }
 
-        console.log("Uploaded files:", req.files);
-        try {
-          const {
-            name,
-            address,
-            timeday,
-            starttime,
-            endtime,
-            cuisines,
-            avg_cost1,
-            Mustorder,
-            ModeOfPayment,
-            Phone1,
-            Email,
-            fulladdress,
-            no_of_tables1,
-            Features,
-            curruseremail,
-          } = req.body;
+//       console.log("token verified at manager.addhotel");
+//       upload(req, res, async (err) => {
+//         if (err instanceof multer.MulterError) {
+//           if (err.code === "LIMIT_FILE_SIZE") {
+//             return res.status(400).json({ error: "File size too large" });
+//           }
+//         } else if (err) {
+//           console.error("File upload error:", err);
+//           return res.status(500).json({ error: "File upload failed" });
+//         }
 
-          if (
-            !name ||
-            !address ||
-            !timeday ||
-            !starttime ||
-            !endtime ||
-            !cuisines ||
-            !avg_cost1 ||
-            !Mustorder ||
-            !ModeOfPayment ||
-            !Phone1 ||
-            !Email ||
-            !fulladdress ||
-            !no_of_tables1 ||
-            !Features ||
-            !curruseremail
-          ) {
-            return res.status(400).json({ error: "Fill Up the form" });
-          } else {
-            let Available_Slots = makestring(starttime, endtime, no_of_tables1);
+//         console.log("Uploaded files:", req.files);
+//         try {
+//           const {
+//             name,
+//             address,
+//             timeday,
+//             starttime,
+//             endtime,
+//             cuisines,
+//             avg_cost1,
+//             Mustorder,
+//             ModeOfPayment,
+//             Phone1,
+//             Email,
+//             fulladdress,
+//             no_of_tables1,
+//             Features,
+//             curruseremail,
+//           } = req.body;
 
-            let time = starttime.toString() + " - " + endtime.toString();
-            let manager = await Managers.findOne({ email: curruseremail });
-            let managerId = manager._id;
+//           if (
+//             !name ||
+//             !address ||
+//             !timeday ||
+//             !starttime ||
+//             !endtime ||
+//             !cuisines ||
+//             !avg_cost1 ||
+//             !Mustorder ||
+//             !ModeOfPayment ||
+//             !Phone1 ||
+//             !Email ||
+//             !fulladdress ||
+//             !no_of_tables1 ||
+//             !Features ||
+//             !curruseremail
+//           ) {
+//             return res.status(400).json({ error: "Fill Up the form" });
+//           } else {
+//             let Available_Slots = makestring(starttime, endtime, no_of_tables1);
 
-            const today = new Date().toLocaleDateString();
-            const currentDate = today.split(",")[0];
+//             let time = starttime.toString() + " - " + endtime.toString();
+//             let manager = await Managers.findOne({ email: curruseremail });
+//             let managerId = manager._id;
 
-            let result = new Hotels({
-              managerId,
-              name,
-              address,
-              timeday,
-              time,
-              cuisines,
-              avg_cost: avg_cost1,
-              Mustorder,
-              ModeOfPayment,
-              Phone: Phone1,
-              Email,
-              fulladdress,
-              no_of_tables: no_of_tables1,
+//             const today = new Date().toLocaleDateString();
+//             const currentDate = today.split(",")[0];
 
-              Features,
-              Available_Slots,
-              lastupdated: currentDate,
-            });
+//             let result = new Hotels({
+//               managerId,
+//               name,
+//               address,
+//               timeday,
+//               time,
+//               cuisines,
+//               avg_cost: avg_cost1,
+//               Mustorder,
+//               ModeOfPayment,
+//               Phone: Phone1,
+//               Email,
+//               fulladdress,
+//               no_of_tables: no_of_tables1,
 
-            console.log("Final added before hotel, ", result);
-            result = await result.save();
+//               Features,
+//               Available_Slots,
+//               lastupdated: currentDate,
+//             });
 
-            const hotelId = result._id;
+//             console.log("Final added before hotel, ", result);
+//             result = await result.save();
 
-            const updateImageFilenames = async (fieldName) => {
-              const filename = req.files[fieldName][0].filename;
-              const newFilename = `${hotelId}_${fieldName}.jpg`;
+//             const hotelId = result._id;
 
-              console.log("Old name ", filename);
-              console.log("New name ", newFilename);
+//             const updateImageFilenames = async (fieldName) => {
+//               const filename = req.files[fieldName][0].filename;
+//               const newFilename = `${hotelId}_${fieldName}.jpg`;
 
-              fs.rename(
-                path.join("../client/public/images", filename),
-                path.join("../client/public/images", newFilename),
-                (err) => {
-                  if (err) throw err;
-                  console.log(`${filename} renamed to ${newFilename}`);
-                }
-              );
+//               console.log("Old name ", filename);
+//               console.log("New name ", newFilename);
 
-              return newFilename;
-            };
+//               fs.rename(
+//                 path.join("../client/public/images", filename),
+//                 path.join("../client/public/images", newFilename),
+//                 (err) => {
+//                   if (err) throw err;
+//                   console.log(`${filename} renamed to ${newFilename}`);
+//                 }
+//               );
 
-            const image1Filename = await updateImageFilenames("img1");
-            const image2Filename = await updateImageFilenames("img2");
+//               return newFilename;
+//             };
 
-            await Hotels.findByIdAndUpdate(hotelId, {
-              image1: image1Filename,
-              image2: image2Filename,
-            });
+//             const image1Filename = await updateImageFilenames("img1");
+//             const image2Filename = await updateImageFilenames("img2");
 
-            console.log("Final added hotel, ", result);
-            res.status(200).json(result);
-          }
-        } catch (e) {
-          res.status(400).json({ error: e });
-        }
-      });
-    });
-  } catch (e) {
-    res.json({ error: "Something Went Wrong" });
-  }
-});
+//             await Hotels.findByIdAndUpdate(hotelId, {
+//               image1: image1Filename,
+//               image2: image2Filename,
+//             });
+
+//             console.log("Final added hotel, ", result);
+//             res.status(200).json(result);
+//           }
+//         } catch (e) {
+//           res.status(400).json({ error: e });
+//         }
+//       });
+//     });
+//   } catch (e) {
+//     res.json({ error: "Something Went Wrong" });
+//   }
+// });
 
 // async function updatetables() {
 //   const today = new Date().toLocaleDateString();
@@ -1000,11 +1008,3 @@ app.post("/manager/:id/addhotel", cors(corsOptions), async (req, res) => {
 //     res.status(500).json({ error: "Internal Server Error" });
 //   }
 // }
-
-app.use((req, res, next) => {
-  res.status(404).json({ error_not_found: "page not found" });
-});
-
-app.listen(port, () => {
-  console.log(`Listening on Port ${port}`);
-});

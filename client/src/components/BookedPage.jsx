@@ -46,11 +46,11 @@ const BookedPage = () => {
     doc.text(`Name: ${bookingdetail.username}`, 10, 30);
     doc.text(`Email: ${bookingdetail.email}`, 10, 40);
     doc.text(`Hotel ID: ${bookingdetail.hotelId}`, 10, 50);
-    doc.text(`Hotel : ${bookingdetail.hotelname}`, 10, 60);
+    doc.text(`Hotel Name: ${bookingdetail.hotelname}`, 10, 60);
     doc.text(`Hotel Address: ${bookingdetail.hoteladdress}`, 10, 70);
-    doc.text(`Hotel Slot: ${bookingdetail.date}`, 10, 80);
-    doc.text(`Hotel Table: ${bookingdetail.table}`, 10, 90);
-    doc.text(`Hotel Slot: ${bookingdetail.slot}`, 10, 100);
+    doc.text(`Booking Date: ${bookingdetail.date}`, 10, 80);
+    doc.text(`Booked Table: ${bookingdetail.table}`, 10, 90);
+    doc.text(`Booked Slot: ${bookingdetail.slot}`, 10, 100);
 
     doc.save(`booking_receipt_${bookingdetail._id}.pdf`);
   };
@@ -79,7 +79,7 @@ const BookedPage = () => {
           {bookingdetail.hotelId}
         </div>
         <div className="bookinghotelname">
-          <span>Hotel : </span>
+          <span>Hotel Name: </span>
           {bookingdetail.hotelname}
         </div>
         <div className="bookinghoteladdress">
@@ -87,15 +87,15 @@ const BookedPage = () => {
           {bookingdetail.hoteladdress}
         </div>
         <div className="bookingdate">
-          <span>Date : </span>
+          <span>Booking Date : </span>
           {bookingdetail.date}
         </div>
         <div className="bookingtable">
-          <span>Table No. : </span>
+          <span>Booked Table No. : </span>
           {bookingdetail.table}
         </div>
         <div className="bookingslot">
-          <span>Slot : </span>
+          <span>Booked Slot : </span>
           {bookingdetail.slot}
         </div>
         <div className="formbtns">

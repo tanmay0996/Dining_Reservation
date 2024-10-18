@@ -5,6 +5,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import CallIcon from "@mui/icons-material/Call";
 import EmailIcon from "@mui/icons-material/Email";
@@ -35,10 +36,11 @@ function Homepage() {
       result = await result.json();
       // sethotels(result);
       console.log("hotels are : ", hotels);
+
       if (result.hotels) {
         sethotels(result.hotels);
       } else {
-        gethotels();
+        sethotels([]);
       }
     }
   }
@@ -97,7 +99,7 @@ function Homepage() {
                   }}
                 >
                   <img
-                    src={process.env.PUBLIC_URL + "images/" + value.image1}
+                    src={`${process.env.REACT_APP_Host_Api}/uploads/${value.image1}`}
                     alt="PIC"
                     className="hotelimage"
                   />
@@ -133,7 +135,10 @@ function Homepage() {
                           {value.cuisines}
                         </div>
                         <div className="avg_cost common">
-                          <span className="subheading">Avergae Cost : </span>
+                          <span className="subheading">
+                            <AttachMoneyIcon style={{ fontSize: "15px" }} />
+                            Avergae Cost :
+                          </span>
                           <CurrencyRupeeIcon
                             style={{ fontSize: "15px" }}
                           />{" "}

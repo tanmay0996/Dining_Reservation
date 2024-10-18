@@ -5,9 +5,11 @@ import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import CallIcon from "@mui/icons-material/Call";
 import EmailIcon from "@mui/icons-material/Email";
 import PaymentIcon from "@mui/icons-material/Payment";
+import FeaturedPlayListIcon from "@mui/icons-material/FeaturedPlayList";
 import { UserContext } from "../UserContext";
 
 const HotelInfo = () => {
@@ -29,7 +31,7 @@ const HotelInfo = () => {
 
   useEffect(() => {
     console.log("hotel is ", hotel);
-    console.log(process.env.PUBLIC_URL + "images/" + hotel.image1);
+    console.log(process.env.REACT_APP_Host_Api + "uploads/" + hotel.image1);
   }, [hotel]);
 
   async function gethotel() {
@@ -79,12 +81,12 @@ const HotelInfo = () => {
       <div className="hoteldetails2">
         <div className="hotelimages">
           <img
-            src={`${process.env.PUBLIC_URL}/images/${hotel.image1}`}
+            src={`${process.env.REACT_APP_Host_Api}/uploads/${hotel.image1}`}
             alt="PIC"
             className="hotelimages2"
           />
           <img
-            src={`${process.env.PUBLIC_URL}/images/${hotel.image2}`}
+            src={`${process.env.REACT_APP_Host_Api}/uploads/${hotel.image2}`}
             alt="PIC"
             className="hotelimages2"
           />
@@ -124,7 +126,10 @@ const HotelInfo = () => {
               </div>
 
               <div className="avg_cost2 common2">
-                <span className="subheading2">Avergae Cost: </span>
+                <span className="subheading2">
+                  <AttachMoneyIcon style={{ fontSize: "15px" }} />
+                  Average Meal Cost:
+                </span>
                 <CurrencyRupeeIcon style={{ fontSize: "15px" }} />
                 <span className="subinfo">{hotel.avg_cost}</span>
               </div>
@@ -161,7 +166,9 @@ const HotelInfo = () => {
             </div>
 
             <div className="features">
-              <span className="subheading2">Features : </span>
+              <span className="subheading2">
+                <FeaturedPlayListIcon style={{ fontSize: "15px" }} /> Features :
+              </span>
               <span className="subinfo">{hotel.Features}</span>
             </div>
 

@@ -5,10 +5,12 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import CurrencyRupeeIcon from "@mui/icons-material/CurrencyRupee";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import CallIcon from "@mui/icons-material/Call";
 import EmailIcon from "@mui/icons-material/Email";
 import PaymentIcon from "@mui/icons-material/Payment";
+import FeaturedPlayListIcon from "@mui/icons-material/FeaturedPlayList";
 
 const ManagerProfile = () => {
   let { id, curruser, curruseremail, setCurruser, isuser } =
@@ -188,12 +190,12 @@ const ManagerProfile = () => {
             <div key={index} className="hoteldetails2">
               <div className="hotelimages">
                 <img
-                  src={`${process.env.PUBLIC_URL}/images/${value.image1}`}
+                  src={`${process.env.REACT_APP_Host_Api}/uploads/${value.image1}`}
                   alt="PIC"
                   className="hotelimages2"
                 />
                 <img
-                  src={`${process.env.PUBLIC_URL}/images/${value.image2}`}
+                  src={`${process.env.REACT_APP_Host_Api}/uploads/${value.image2}`}
                   alt="PIC"
                   className="hotelimages2"
                 />
@@ -235,7 +237,10 @@ const ManagerProfile = () => {
                     </div>
 
                     <div className="avg_cost2 common2">
-                      <span className="subheading2">Avergae Cost: </span>
+                      <span className="subheading2">
+                        <AttachMoneyIcon style={{ fontSize: "15px" }} />
+                        Average Cost:
+                      </span>
                       <span className="subinfo">
                         <CurrencyRupeeIcon style={{ fontSize: "15px" }} />
                         {value.avg_cost}
@@ -278,7 +283,10 @@ const ManagerProfile = () => {
                   </div>
 
                   <div className="features">
-                    <span className="subheading2">Features : </span>
+                    <span className="subheading2">
+                      <FeaturedPlayListIcon style={{ fontSize: "15px" }} />
+                      Features :{" "}
+                    </span>
                     <span className="subinfo">{value.Features}</span>
                   </div>
 
