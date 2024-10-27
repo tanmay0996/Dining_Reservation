@@ -59,8 +59,8 @@ const Payment = async (req, res) => {
       } = req.body;
 
       const id = hotel._id;
-      // const hotelImageUrl = `http://localhost:3000/images/${hotel.image1}`;
-      // console.log(hotel.image1);
+      const hotelImageUrl = `${process.env.REACT_APP_Host_Api}/uploads/${hotel.image1}`;
+      console.log(hotelImageUrl);
       const lineItems = [
         {
           price_data: {
@@ -68,7 +68,7 @@ const Payment = async (req, res) => {
             product_data: {
               name: hotelname,
               description: `Dining reservation at ${hotelname} for Table ${tableSelected}, Slot ${slotSelected}`,
-              // images:[hotelImageUrl],
+              images: [hotelImageUrl],
               metadata: {
                 table: tableSelected,
                 slot: slotSelected,

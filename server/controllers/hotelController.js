@@ -22,6 +22,7 @@ const searchHotels = async (req, res) => {
       hotels = await Hotels.find();
     }
 
+    console.log(hotels);
     if (hotels.length) {
       res.status(200).json({ info: "hi", hotels });
     } else {

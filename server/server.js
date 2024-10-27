@@ -11,6 +11,7 @@ const updatetablesMiddleware = require("./middleware/updatetablesMiddleware");
 
 const secretKey = process.env.secretKey;
 const managersecretKey = process.env.managersecretKey;
+const mongodb_url = process.env.mongodb_url;
 
 const port = process.env.PORT || 5000;
 
@@ -33,13 +34,26 @@ app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
 app.use(updatetablesMiddleware);
 app.use(express.urlencoded({ extended: true }));
 
+// mongoose
+//   .connect("mongodb://127.0.0.1:27017/hotel_table_booking")
+//   .then(() => {
+//     console.log("connected to monogo");
+//   })
+//   .catch(() => {
+//     console.log("Database connection Error");
+//   });
+
+const clientOptions = {
+  serverApi: { version: "1", strict: true, deprecationErrors: true },
+};
+
 mongoose
-  .connect("mongodb://127.0.0.1:27017/hotel_table_booking")
+  .connect(mongodb_url, clientOptions)
   .then(() => {
-    console.log("connected to monogo");
+    console.log("Connected to Mongo");
   })
-  .catch(() => {
-    console.log("Database connection Error");
+  .catch((e) => {
+    console.log("Database connection Error ", e);
   });
 
 const hotelRoutes = require("./routes/hotelRoutes");
