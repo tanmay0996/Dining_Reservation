@@ -28,7 +28,7 @@ app.get("/success", async (req, res) => {
       const hotel = { _id: id };
 
       const response = await axios.post(
-        `http://localhost:5000/hotel/${id}/book`,
+        `${process.env.REACT_APP_Host_Api}/hotel/${id}/book`,
         {
           hotel,
           tableSelected,
@@ -45,7 +45,9 @@ app.get("/success", async (req, res) => {
       const bookingId = response.data.id;
       console.log("Booking successful:", response.data);
 
-      res.redirect(`http://localhost:3000/user/${userId}/booked/${bookingId}`);
+      res.redirect(
+        `${process.env.REACT_APP_Front_End}/user/${userId}/booked/${bookingId}`
+      );
     });
   } catch (error) {
     console.error("Error booking hotel:", error);
@@ -53,7 +55,7 @@ app.get("/success", async (req, res) => {
   }
 });
 
-const PORT = 5001;
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`Redirect server is running on port ${PORT}`);
 });

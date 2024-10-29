@@ -85,10 +85,12 @@ const Payment = async (req, res) => {
         line_items: lineItems,
         mode: "payment",
         locale: "en",
-        success_url: `http://localhost:5001/success?id=${id}&tableSelected=${tableSelected}&slotSelected=${slotSelected}&curruseremail=${encodeURIComponent(
+        success_url: `${
+          process.env.REACT_APP_Stripe_Server
+        }/success?id=${id}&tableSelected=${tableSelected}&slotSelected=${slotSelected}&curruseremail=${encodeURIComponent(
           curruseremail
         )}&token=${encodeURIComponent(token)}`,
-        cancel_url: `http://localhost:3000/cancel/${id}/${tableSelected}/${slotSelected}`,
+        cancel_url: `${process.env.REACT_APP_Front_End}/cancel/${id}/${tableSelected}/${slotSelected}`,
       });
 
       res.status(200).json({ id: session.id });
