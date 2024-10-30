@@ -7,7 +7,7 @@ const cookieParser = require("cookie-parser");
 const path = require("path");
 require("dotenv").config();
 
-const updatetablesMiddleware = require("./middleware/updatetablesMiddleware");
+const updatetablesMiddleware = require("./middleware/updatetablesMiddleware.js");
 
 const secretKey = process.env.secretKey;
 const managersecretKey = process.env.managersecretKey;
@@ -56,7 +56,7 @@ mongoose
     console.log("Database connection Error ", e);
   });
 
-const hotelRoutes = require("./routes/hotelRoutes");
+const hotelRoutes = require("./routes/hotelRoutes.js");
 const userRoutes = require("./routes/userRoutes.js");
 const bookingRoutes = require("./routes/bookingRoutes.js");
 const managerRoutes = require("./routes/managerRoutes.js");
