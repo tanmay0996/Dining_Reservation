@@ -11,10 +11,10 @@ app.use(cookieParser());
 
 const secretKey = process.env.secretKey;
 
-app.use((req, res, next) => {
-  console.log(`Incoming request to ${req.path}`);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log(`Incoming request to ${req.path}`);
+//   next();
+// });
 
 app.get("/success", async (req, res) => {
   const { id, tableSelected, slotSelected, curruseremail, token } = req.query;
