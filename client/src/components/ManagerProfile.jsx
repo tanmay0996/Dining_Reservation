@@ -60,8 +60,6 @@ const ManagerProfile = () => {
 
   async function getmanagerinfo() {
     try {
-      console.log("from manager profile ", curruseremail, curruser);
-
       if (!curruseremail) {
         navigate("/managerlogin");
       } else if (curruseremail && isuser) {
@@ -98,15 +96,15 @@ const ManagerProfile = () => {
   }
 
   async function update() {
-    console.log(
-      curruseremail,
-      newname,
-      newphn,
-      newpwd,
-      newaddress,
-      newaadhar,
-      newpan
-    );
+    // console.log(
+    //   curruseremail,
+    //   newname,
+    //   newphn,
+    //   newpwd,
+    //   newaddress,
+    //   newaadhar,
+    //   newpan
+    // );
 
     let result = await fetch(
       process.env.REACT_APP_Host_Api + `/managerprofile/${id}`,
@@ -131,9 +129,9 @@ const ManagerProfile = () => {
     result = await result.json();
 
     setToupdate(!toupdate);
-    console.log(curruser, " changed to ", result.name);
+    // console.log(curruser, " changed to ", result.name);
     setCurruser(result.name);
-    console.log("Now curruser is ", curruser);
+    // console.log("Now curruser is ", curruser);
   }
 
   return !toupdate ? (

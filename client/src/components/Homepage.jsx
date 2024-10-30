@@ -35,8 +35,7 @@ function Homepage() {
 
       result = await result.json();
       // sethotels(result);
-      console.log("hotels are : ", hotels);
-
+      
       if (result.hotels) {
         sethotels(result.hotels);
       } else {
@@ -46,7 +45,6 @@ function Homepage() {
   }
 
   async function gethotels() {
-    console.log(process.env);
 
     let result = await fetch(process.env.REACT_APP_Host_Api, {
       method: "POST",
@@ -57,7 +55,7 @@ function Homepage() {
     });
 
     result = await result.json();
-    console.log("here");
+    // console.log("here");
 
     // if (result.error) {
     //   alert(result.Error);
@@ -67,7 +65,7 @@ function Homepage() {
 
     setCurruser(username);
     setIsuser(true);
-    console.log("UserInfo2 is ", result);
+    // console.log("UserInfo2 is ", result);
     sethotels(result.hotels);
   }
 

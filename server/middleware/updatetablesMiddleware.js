@@ -25,7 +25,7 @@ async function updatetables() {
 async function updatetablesMiddleware(req, res, next) {
   try {
     await updatetables();
-    console.log("Updated");
+    // console.log("Updated");
     next();
   } catch (error) {
     console.error("Error updating tables:", error);

@@ -6,8 +6,6 @@ const formthestring = require("../utils/formthestring");
 
 const searchHotels = async (req, res) => {
   try {
-    console.log("getting req");
-
     let { hotelsearch } = req.body;
 
     let hotels;

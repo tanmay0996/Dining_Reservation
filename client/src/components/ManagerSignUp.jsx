@@ -65,7 +65,6 @@ const ManagerSignup = () => {
     setCurruseremail(result.email);
     setIsuser(false);
 
-    console.log(setCurruseremail);
     navigate(`/managerprofile/${result.managerId}`);
   }
 

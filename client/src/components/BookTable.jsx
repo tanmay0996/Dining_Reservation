@@ -42,7 +42,7 @@ function BookTable() {
     }
 
     const session = await res.json();
-    console.log(session);
+    // console.log(session);
 
     const result = stripe.redirectToCheckout({
       sessionId: session.id,

@@ -51,8 +51,8 @@ const Login = () => {
       setCurruser(result.username);
       setIsuser(false);
 
-      console.log(curruseremail);
-      console.log("Result name ", result);
+      // console.log(curruseremail);
+      // console.log("Result name ", result);
 
       navigate(`/managerprofile/${result.managerId}`);
     } catch (e) {

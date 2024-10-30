@@ -17,7 +17,7 @@ const Navbar = () => {
 
   useEffect(() => {
     profile();
-    console.log("From Navbar, Curruser ", curruser);
+    // console.log("From Navbar, Curruser ", curruser);
   }, [id, curruser, curruseremail, isuser]);
 
   async function profile() {
@@ -29,8 +29,6 @@ const Navbar = () => {
       credentials: "include",
     });
     result = await result.json();
-
-    console.log("My result from navbar profile", result);
 
     setCurruseremail(result?.email);
     if (result.username) {

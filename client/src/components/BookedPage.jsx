@@ -16,7 +16,7 @@ const BookedPage = () => {
 
   async function getbookingdetails() {
     // if (isuser || !curruser || !curruseremail) {
-    console.log("booking page ", isuser, curruser, curruseremail);
+    // console.log("booking page ", isuser, curruser, curruseremail);
     // navigate("/");
     // } else {
     let result = await fetch(

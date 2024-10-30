@@ -6,8 +6,6 @@ const User = () => {
   let navigate = useNavigate();
   let { curruseremail } = useContext(UserContext);
 
-  console.log(curruseremail);
-
   const [user, setUser] = useState({});
   const [bookings, setBookings] = useState([]);
   const [toupdate, setToupdate] = useState(false);
@@ -32,7 +30,7 @@ const User = () => {
 
   async function getuser() {
     try {
-      console.log("make req", curruseremail);
+      // console.log("make req", curruseremail);
 
       if (!isuser || !curruseremail || !curruser) {
         navigate("/");
@@ -83,7 +81,7 @@ const User = () => {
   }
 
   async function deleteacc() {
-    console.log("Deleted");
+    
     let result = await fetch(process.env.REACT_APP_Host_Api + "/userdelete", {
       method: "DELETE",
       body: JSON.stringify({ curruseremail }),

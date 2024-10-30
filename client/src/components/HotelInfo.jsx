@@ -30,8 +30,8 @@ const HotelInfo = () => {
   }, []);
 
   useEffect(() => {
-    console.log("hotel is ", hotel);
-    console.log(process.env.REACT_APP_Host_Api + "uploads/" + hotel.image1);
+    // console.log("hotel is ", hotel);
+    // console.log(process.env.REACT_APP_Host_Api + "uploads/" + hotel.image1);
   }, [hotel]);
 
   async function gethotel() {
@@ -58,7 +58,7 @@ const HotelInfo = () => {
 
   async function booktable() {
     if (curruser && isuser) {
-      console.log(hotel, tableSelected, slotSelected, curruseremail);
+      // console.log(hotel, tableSelected, slotSelected, curruseremail);
       navigate(`/hotel/${params.id}/book`, {
         state: {
           hotel,

@@ -23,7 +23,7 @@ const getBooking = async (req, res) => {
           return res.redirect("http://localhost:3000");
         } else throw err2;
       }
-      console.log("Token verified at /booked/:id");
+      // console.log("Token verified at /booked/:id");
 
       let bookingid = req.params.id1;
       let result = await Bookings.findOne({ _id: bookingid });

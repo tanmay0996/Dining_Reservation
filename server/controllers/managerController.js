@@ -205,7 +205,7 @@ const get_ManagerInfo_and_HotelInfo = async (req, res) => {
     const { token } = req.cookies;
     jwt.verify(token, managersecretKey, {}, async (err, info) => {
       if (err) {
-        console.log("Got the error");
+        console.log("err");
         throw err;
       } else {
         let email = info.email;
@@ -345,7 +345,7 @@ const addHotel = async (req, res) => {
             lastupdated: currentDate,
           });
 
-          console.log("Final added before hotel, ", result);
+          console.log("Final added before hotel, ");
           result = await result.save();
 
           const hotelId = result._id;
@@ -354,15 +354,15 @@ const addHotel = async (req, res) => {
             const filename = req.files[fieldName][0].filename;
             const newFilename = `${hotelId}_${fieldName}.jpg`;
 
-            console.log("Old name ", filename);
-            console.log("New name ", newFilename);
+            // console.log("Old name ", filename);
+            // console.log("New name ", newFilename);
 
             fs.rename(
               path.join(__dirname, "../uploads", filename),
               path.join(__dirname, "../uploads", newFilename),
               (err) => {
                 if (err) throw err;
-                console.log(`${filename} renamed to ${newFilename}`);
+                // console.log(`${filename} renamed to ${newFilename}`);
               }
             );
 
@@ -377,7 +377,7 @@ const addHotel = async (req, res) => {
             image2: image2Filename,
           });
 
-          console.log("Final added hotel, ", result);
+          console.log("Final added hotel, ");
           res.status(200).json(result);
         } catch (e) {
           console.log("error : ", e);
