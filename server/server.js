@@ -13,7 +13,7 @@ const secretKey = process.env.secretKey;
 const managersecretKey = process.env.managersecretKey;
 const mongodb_url = process.env.mongodb_url;
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT;
 
 app.use(express.json());
 app.use(cookieParser());

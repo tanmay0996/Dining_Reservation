@@ -60,7 +60,7 @@ const Payment = async (req, res) => {
 
       const id = hotel._id;
       const hotelImageUrl = `${process.env.REACT_APP_Host_Api}/uploads/${hotel.image1}`;
-      console.log(hotelImageUrl);
+      
       const lineItems = [
         {
           price_data: {

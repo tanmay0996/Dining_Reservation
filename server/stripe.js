@@ -11,8 +11,19 @@ app.use(cookieParser());
 
 const secretKey = process.env.secretKey;
 
+console.log("Secret Key:", secretKey);
+
+app.use((req, res, next) => {
+  console.log(`Incoming request to ${req.path}`);
+  next();
+});
+
 app.get("/success", async (req, res) => {
+  console.log("Query parameters:", req.query);
+
   const { id, tableSelected, slotSelected, curruseremail, token } = req.query;
+
+  console.log("Decoded Token:", decodeURIComponent(token));
 
   try {
     if (!token) {
@@ -21,6 +32,7 @@ app.get("/success", async (req, res) => {
 
     jwt.verify(decodeURIComponent(token), secretKey, async (err, info) => {
       if (err) {
+        console.log(err);
         return res.status(403).send("Invalid token");
       }
 
@@ -55,7 +67,7 @@ app.get("/success", async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT || 5001;
+const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Redirect server is running on port ${PORT}`);
 });
