@@ -24,8 +24,26 @@ app.use(
   })
 );
 
+const allowedOrigins = [
+  "http://localhost:3000", // Development URL
+  `${process.env.REACT_APP_Front_End}`, // Production URL
+];
+
+app.use(
+  cors({
+    origin: allowedOrigins,
+    methods: "GET,PUT,POST,DELETE",
+    credentials: true,
+    optionsSuccessStatus: 204,
+  })
+);
+
 // app.use(express.static("public"));
 app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
+
+// Serve static files from the 'build' directory
+app.use(express.static(path.join(__dirname, "../build")));
+
 // app.use(
 //   "/uploads",
 //   express.static("E:/React/Hotel Dining Reservation System/server/uploads")
