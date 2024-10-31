@@ -33,13 +33,7 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (allowedOrigins.includes(origin) || !origin) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
+    origin:true,
     methods: "GET,PUT,POST,DELETE",
     credentials: true,
     optionsSuccessStatus: 204,
