@@ -17,12 +17,12 @@ const port = process.env.PORT;
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(
-  cors({
-    origin: `${process.env.REACT_APP_Front_End}`,
-    credentials: true,
-  })
-);
+// app.use(
+//   cors({
+//     origin: `${process.env.REACT_APP_Front_End}`,
+//     credentials: true,
+//   })
+// );
 
 const allowedOrigins = [
   "http://localhost:3000", // Development URL
