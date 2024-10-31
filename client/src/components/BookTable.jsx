@@ -20,7 +20,7 @@ function BookTable() {
   async function payment() {
     const stripe = await loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
-    const res = await fetch(`http://127.0.0.1:5000/payment`, {
+    const res = await fetch(`${process.env.REACT_APP_Host_Api}/payment`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
