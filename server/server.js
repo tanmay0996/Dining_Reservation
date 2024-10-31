@@ -25,15 +25,16 @@ app.use(cookieParser());
 // );
 
 const allowedOrigins = [
-  "http://localhost:3000", // Development URL
-  `${process.env.REACT_APP_Front_End}`, // Production URL
-  `${process.env.REACT_APP_Host_Api}`, // Backend Production URL
-  `${process.env.REACT_APP_Stripe_Server}`, // Stripe Service URL
+  "http://localhost:3000",
+  "https://hotel-dining-reservation-system.onrender.com",
+  "https://hotel-dining-reservation-system-backend.onrender.com",
+  "https://hotel-dining-stripe-service.onrender.com",
 ];
+
 
 app.use(
   cors({
-    origin:true,
+    origin:allowedOrigins,
     methods: "GET,PUT,POST,DELETE",
     credentials: true,
     optionsSuccessStatus: 204,
