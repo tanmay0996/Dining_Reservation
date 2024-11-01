@@ -33,7 +33,7 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: allowedOrigins,
+    origin: '*',
     methods: "GET,PUT,POST,DELETE",
     credentials: true,
     optionsSuccessStatus: 204,
