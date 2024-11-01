@@ -138,7 +138,7 @@ app.post("/logout", async (req, res) => {
   }
 });
 
-app.get((req,res) => {
+app.get("/test",(req,res) => {
   res.send('Server is working');
 });
 
