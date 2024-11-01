@@ -51,9 +51,15 @@ app.get("/success", async (req, res) => {
       const bookingId = response.data.id;
       console.log("Booking successful:", response.data);
 
-      res.redirect(
-        `${process.env.REACT_APP_Front_End}/user/${userId}/booked/${bookingId}`
-      );
+      res
+        .cookie("token", token, {
+          httpOnly: true,
+          secure: true,
+          sameSite: "None",
+        })
+        .redirect(
+          `${process.env.REACT_APP_Front_End}/user/${userId}/booked/${bookingId}`
+        );
     });
   } catch (error) {
     console.error("Error booking hotel:", error);
