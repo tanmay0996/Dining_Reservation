@@ -60,7 +60,7 @@ const Payment = async (req, res) => {
 
       const id = hotel._id;
       const hotelImageUrl = `${process.env.REACT_APP_Host_Api}/uploads/${hotel.image1}`;
-      
+
       const lineItems = [
         {
           price_data: {
@@ -85,12 +85,20 @@ const Payment = async (req, res) => {
         line_items: lineItems,
         mode: "payment",
         locale: "en",
+
         success_url: `${
           process.env.REACT_APP_Stripe_Server
-        }/success?id=${id}&tableSelected=${tableSelected}&slotSelected=${slotSelected}&curruseremail=${encodeURIComponent(
-          curruseremail
-        )}&token=${encodeURIComponent(token)}`,
+        }/success?id=${id}&tableSelected=${tableSelected}&slotSelected=${slotSelected}&curruseremail=${curruseremail}&token=${encodeURIComponent(
+          token
+        )}`,
+
         cancel_url: `${process.env.REACT_APP_Front_End}/cancel/${id}/${tableSelected}/${slotSelected}`,
+      });
+
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: true,
+        sameSite: "None",
       });
 
       res.status(200).json({ id: session.id });
