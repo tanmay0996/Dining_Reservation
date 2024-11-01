@@ -87,12 +87,28 @@ const Payment = async (req, res) => {
         locale: "en",
         success_url: `${
           process.env.REACT_APP_Stripe_Server
-        }/success?id=${id}&tableSelected=${tableSelected}&slotSelected=${slotSelected}&curruseremail=${encodeURIComponent(
+        }/success?id=${encodeURIComponent(
+          id
+        )}&tableSelected=${encodeURIComponent(
+          tableSelected
+        )}&slotSelected=${encodeURIComponent(
+          slotSelected
+        )}&curruseremail=${encodeURIComponent(
           curruseremail
         )}&token=${encodeURIComponent(token)}`,
-        cancel_url: `${process.env.REACT_APP_Front_End}/cancel/${id}/${tableSelected}/${slotSelected}`,
+        cancel_url: `${
+          process.env.REACT_APP_Front_End
+        }/cancel/${encodeURIComponent(id)}/${encodeURIComponent(
+          tableSelected
+        )}/${encodeURIComponent(slotSelected)}`,
       });
 
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+      });
+      
       res.status(200).json({ id: session.id });
     });
   } catch (e) {
