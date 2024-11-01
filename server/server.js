@@ -44,7 +44,7 @@ app.use(
 app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
 
 // Serve static files from the 'build' directory
-app.use(express.static(path.join(__dirname, "../build")));
+app.use(express.static(path.join(__dirname, "../client/build")));
 
 // app.use(
 //   "/uploads",
