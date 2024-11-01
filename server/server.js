@@ -26,15 +26,14 @@ app.use(cookieParser());
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://hotel-dining-reservation-system.onrender.com",
-  "https://hotel-dining-reservation-system-backend.onrender.com",
-  "https://hotel-dining-stripe-service.onrender.com",
+  `${process.env.REACT_APP_Front_End}`,
+  `${process.env.REACT_APP_Host_Api}`,
+  `${process.env.REACT_APP_Stripe_Server}`,
 ];
-
 
 app.use(
   cors({
-    origin:allowedOrigins,
+    origin: allowedOrigins,
     methods: "GET,PUT,POST,DELETE",
     credentials: true,
     optionsSuccessStatus: 204,
