@@ -85,6 +85,7 @@ const Payment = async (req, res) => {
         line_items: lineItems,
         mode: "payment",
         locale: "en",
+        
         success_url: `${
           process.env.REACT_APP_Stripe_Server
         }/success?id=${encodeURIComponent(
@@ -96,6 +97,7 @@ const Payment = async (req, res) => {
         )}&curruseremail=${encodeURIComponent(
           curruseremail
         )}&token=${encodeURIComponent(token)}`,
+        
         cancel_url: `${
           process.env.REACT_APP_Front_End
         }/cancel/${encodeURIComponent(id)}/${encodeURIComponent(
