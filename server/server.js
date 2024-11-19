@@ -40,28 +40,12 @@ app.use(
   })
 );
 
-// Serve static files from the 'build' directory
 app.use(express.static(path.join(__dirname, "../client/build")));
 
-// app.use(express.static("public"));
 app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
-
-// app.use(
-//   "/uploads",
-//   express.static("E:/React/Hotel Dining Reservation System/server/uploads")
-// );
 
 app.use(updatetablesMiddleware);
 app.use(express.urlencoded({ extended: true }));
-
-// mongoose
-//   .connect("mongodb://127.0.0.1:27017/hotel_table_booking")
-//   .then(() => {
-//     console.log("connected to monogo");
-//   })
-//   .catch(() => {
-//     console.log("Database connection Error");
-//   });
 
 const clientOptions = {
   serverApi: { version: "1", strict: true, deprecationErrors: true },
@@ -152,8 +136,14 @@ app.use((req, res, next) => {
 
 
 app.get('*', (req, res) => {
-  res.sendFile(path.resolve(__dirname, "../client/build", "index.html"));
+  const buildPath = path.resolve(__dirname, "../client/build", "index.html");
+  if (fs.existsSync(buildPath)) {
+    res.sendFile(buildPath);
+  } else {
+    res.status(500).send('Build folder is missing. Please redeploy.');
+  }
 });
+
 
 console.log(path.resolve(__dirname, "../client/build", "index.html"));
 
