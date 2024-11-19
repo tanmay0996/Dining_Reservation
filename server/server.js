@@ -141,6 +141,7 @@ app.get('*', (req, res) => {
   if (fs.existsSync(buildPath)) {
     res.sendFile(buildPath);
   } else {
+    console.log("Build folder is missing. Please redeploy.")
     res.status(500).send('Build folder is missing. Please redeploy.');
   }
 });
