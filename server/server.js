@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const cookieParser = require("cookie-parser");
 const path = require("path");
+const fs = require("fs");
 require("dotenv").config();
 
 const updatetablesMiddleware = require("./middleware/updatetablesMiddleware.js");
