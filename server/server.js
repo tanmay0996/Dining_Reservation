@@ -14,7 +14,7 @@ const secretKey = process.env.secretKey;
 const managersecretKey = process.env.managersecretKey;
 const mongodb_url = process.env.mongodb_url;
 
-const port = process.env.PORT;
+const port = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(cookieParser());
@@ -41,14 +41,14 @@ app.use(
   })
 );
 
-// mongoose
-//   .connect("mongodb://127.0.0.1:27017/hotel_table_booking")
-//   .then(() => {
-//     console.log("Connected to MongoDB");
-//   })
-//   .catch((e) => {
-//     console.log("Database Connection error : ", e);
-//   });
+mongoose
+  .connect("mongodb://127.0.0.1:27017/hotel_table_booking")
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((e) => {
+    console.log("Database Connection error : ", e);
+  });
 // app.use(express.static(path.join(__dirname, "client_build")));
 
 app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
@@ -60,19 +60,24 @@ const clientOptions = {
   serverApi: { version: "1", strict: true, deprecationErrors: true },
 };
 
-mongoose
-  .connect(mongodb_url, clientOptions)
-  .then(() => {
-    console.log("Connected to Mongo");
-  })
-  .catch((e) => {
-    console.log("Database connection Error ", e);
-  });
+// mongoose
+//   .connect(mongodb_url, clientOptions)
+//   .then(() => {
+//     console.log("Connected to Mongo");
+//   })
+//   .catch((e) => {
+//     console.log("Database connection Error ", e);
+//   });
 
 const hotelRoutes = require("./routes/hotelRoutes.js");
 const userRoutes = require("./routes/userRoutes.js");
 const bookingRoutes = require("./routes/bookingRoutes.js");
 const managerRoutes = require("./routes/managerRoutes.js");
+
+app.use((req, res, next) => {
+  console.log(`Request Method: ${req.method}, Request URL: ${req.url}`);
+  next();
+});
 
 app.use("/", hotelRoutes);
 app.use("/hotel", hotelRoutes);
@@ -140,11 +145,6 @@ app.post("/logout", async (req, res) => {
 // app.use((req, res, next) => {
 //   res.status(404).json({ error_not_found: "page not found" });
 // });
-
-app.use((req, res, next) => {
-  console.log(`Request Method: ${req.method}, Request URL: ${req.url}`);
-  next();
-});
 
 // app.get('*', (req, res) => {
 //   const buildPath = path.resolve(__dirname, "client_build", "index.html");
