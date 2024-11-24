@@ -14,7 +14,7 @@ const secretKey = process.env.secretKey;
 const managersecretKey = process.env.managersecretKey;
 const mongodb_url = process.env.mongodb_url;
 
-const port = process.env.PORT || 5000;
+const port = process.env.PORT;
 
 app.use(express.json());
 app.use(cookieParser());
@@ -41,7 +41,15 @@ app.use(
   })
 );
 
-app.use(express.static(path.join(__dirname, "client_build")));
+// mongoose
+//   .connect("mongodb://127.0.0.1:27017/hotel_table_booking")
+//   .then(() => {
+//     console.log("Connected to MongoDB");
+//   })
+//   .catch((e) => {
+//     console.log("Database Connection error : ", e);
+//   });
+// app.use(express.static(path.join(__dirname, "client_build")));
 
 app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
 
@@ -73,6 +81,8 @@ app.use("/", managerRoutes);
 app.use("/", bookingRoutes);
 
 app.post("/profile", (req, res) => {
+  console.log("Got the request");
+
   try {
     const { token } = req.cookies;
 
@@ -123,31 +133,31 @@ app.post("/logout", async (req, res) => {
   }
 });
 
-app.get("/test",(req,res) => {
-  res.send('Server is working');
-});
+// app.get("/test",(req,res) => {
+//   res.send('Server is working');
+// });
 
 // app.use((req, res, next) => {
 //   res.status(404).json({ error_not_found: "page not found" });
 // });
-app.use((req, res, next) => {
-  console.log(`Request Method: ${req.method}, Request URL: ${req.url}`);
-  next();
-});
 
+// app.use((req, res, next) => {
+//   console.log(`Request Method: ${req.method}, Request URL: ${req.url}`);
+//   next();
+// });
 
-app.get('*', (req, res) => {
-  const buildPath = path.resolve(__dirname, "client_build", "index.html");
-  if (fs.existsSync(buildPath)) {
-    console.log("Build Folder is available");
-    res.sendFile(buildPath);
-  } else {
-    console.log("Build folder is missing. Please redeploy.");
-    res.status(500).send('Build folder is missing. Please redeploy.');
-  }
-});
+// app.get('*', (req, res) => {
+//   const buildPath = path.resolve(__dirname, "client_build", "index.html");
+//   if (fs.existsSync(buildPath)) {
+//     console.log("Build Folder is available");
+//     res.sendFile(buildPath);
+//   } else {
+//     console.log("Build folder is missing. Please redeploy.");
+//     res.status(500).send('Build folder is missing. Please redeploy.');
+//   }
+// });
 
-console.log(path.resolve(__dirname, "../client/build", "index.html"));
+// console.log(path.resolve(__dirname, "../client/build", "index.html"));
 
 app.listen(port, () => {
   console.log(`Listening on Port ${port}`);

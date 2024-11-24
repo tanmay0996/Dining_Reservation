@@ -21,7 +21,8 @@ const Navbar = () => {
   }, [id, curruser, curruseremail, isuser]);
 
   async function profile() {
-    let result = await fetch(process.env.REACT_APP_Host_Api + "/profile", {
+    console.log(process.env.REACT_APP_Host_Api);
+    let result = await fetch(`${process.env.REACT_APP_Host_Api}/profile`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

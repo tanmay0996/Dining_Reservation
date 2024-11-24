@@ -11,6 +11,8 @@ app.use(cookieParser());
 
 const secretKey = process.env.secretKey;
 
+const PORT = process.env.PORT;
+
 // app.use((req, res, next) => {
 //   console.log(`Incoming request to ${req.path}`);
 //   next();
@@ -67,7 +69,6 @@ app.get("/success", async (req, res) => {
   }
 });
 
-const PORT = process.env.PORT;
 app.listen(PORT, () => {
   console.log(`Redirect server is running on port ${PORT}`);
 });
