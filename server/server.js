@@ -141,10 +141,10 @@ app.post("/logout", async (req, res) => {
 //   res.status(404).json({ error_not_found: "page not found" });
 // });
 
-// app.use((req, res, next) => {
-//   console.log(`Request Method: ${req.method}, Request URL: ${req.url}`);
-//   next();
-// });
+app.use((req, res, next) => {
+  console.log(`Request Method: ${req.method}, Request URL: ${req.url}`);
+  next();
+});
 
 // app.get('*', (req, res) => {
 //   const buildPath = path.resolve(__dirname, "client_build", "index.html");
