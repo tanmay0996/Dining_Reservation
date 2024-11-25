@@ -49,7 +49,9 @@ mongoose
   .catch((e) => {
     console.log("Database Connection error : ", e);
   });
-// app.use(express.static(path.join(__dirname, "client_build")));
+
+console.log(__dirname+"../client/build");
+app.use(express.static(path.join(__dirname, "../client/build")));
 
 app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
 
