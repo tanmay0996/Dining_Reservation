@@ -50,7 +50,7 @@ app.use(
 //     console.log("Database Connection error : ", e);
 //   });
 
-console.log(__dirname+"../client/build");
+console.log(__dirname + "../client/build");
 app.use(express.static(path.join(__dirname, "../client/build")));
 
 app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
@@ -148,18 +148,17 @@ app.post("/logout", async (req, res) => {
 //   res.status(404).json({ error_not_found: "page not found" });
 // });
 
-// app.get('*', (req, res) => {
-//   const buildPath = path.resolve(__dirname, "client_build", "index.html");
-//   if (fs.existsSync(buildPath)) {
-//     console.log("Build Folder is available");
-//     res.sendFile(buildPath);
-//   } else {
-//     console.log("Build folder is missing. Please redeploy.");
-//     res.status(500).send('Build folder is missing. Please redeploy.');
-//   }
-// });
-
 // console.log(path.resolve(__dirname, "../client/build", "index.html"));
+
+app.get("*", (req, res) => {
+  const buildPath = path.join(__dirname, "../client/build", "index.html");
+  if (fs.existsSync(buildPath)) {
+    res.sendFile(buildPath);
+  } else {
+    console.error("Build folder is missing. Please redeploy.");
+    res.status(500).send("Build folder is missing. Please redeploy.");
+  }
+});
 
 app.listen(port, () => {
   console.log(`Listening on Port ${port}`);
