@@ -36,7 +36,7 @@ const HotelInfo = () => {
 
   async function gethotel() {
     let result = await fetch(
-      process.env.REACT_APP_Host_Api + `/hotel/${params.id}`,
+      process.env.REACT_APP_Host_Api + `/api/hotel/${params.id}`,
       {
         method: "GET",
         headers: {

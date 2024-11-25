@@ -5,8 +5,8 @@ const {
   getHotelById,
 } = require("../controllers/hotelController");
 
-router.post("/", searchHotels);
-router.get("/hotel/:id", getHotelById);
+router.post("/api/", searchHotels);
+router.get("/api/hotel/:id", getHotelById);
 // router.post("/user/:id", Update_User_Info);
 
 module.exports = router;
