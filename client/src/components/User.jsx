@@ -26,12 +26,10 @@ const User = () => {
   useEffect(() => {
     getuser();
     setnewpwd("");
-  }, [id, toupdate, curruser, curruseremail, setIsuser]);
+  }, [id, toupdate, curruser, curruseremail, setIsuser, isuser]);
 
   async function getuser() {
     try {
-      // console.log("make req", curruseremail);
-
       if (!isuser || !curruseremail || !curruser) {
         navigate("/");
       } else {

@@ -56,7 +56,7 @@ const managerSignup = async (req, res) => {
         email: manager.email,
       });
   } catch (e) {
-    res.json({ error: "Something Went Wrong" });
+    res.status(500).json({ error: "Something Went Wrong" });
   }
 };
 
@@ -101,7 +101,7 @@ const managerLogin = async (req, res) => {
       return res.status(404).json({ error: "Manager not found" });
     }
   } catch (e) {
-    res.json({ error: "Something Went Wrong" });
+    res.status(500).json({ error: "Something Went Wrong" });
   }
 };
 
@@ -192,6 +192,7 @@ const Update_Manager_Info = async (req, res) => {
           sameSite: "None",
           secure: true,
         })
+        .status(200)
         .json({ name: req.body.newname });
     });
   } catch (e) {
@@ -230,7 +231,7 @@ const get_ManagerInfo_and_HotelInfo = async (req, res) => {
           hotels = await Hotels.find({ managerId: manager._id });
         }
 
-        res.json({ manager, hotels });
+        res.status(200).json({ manager, hotels });
       }
     });
   } catch (error) {
@@ -387,7 +388,7 @@ const addHotel = async (req, res) => {
     });
   } catch (e) {
     console.log("error : ", e);
-    res.json({ error: "Something Went Wrong" });
+    res.status(500).json({ error: "Something Went Wrong" });
   }
 };
 

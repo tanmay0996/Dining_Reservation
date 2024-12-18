@@ -18,9 +18,11 @@ const getBooking = async (req, res) => {
         if (
           err2.name === "JsonWebTokenError" &&
           (err2.message === "jwt malformed" ||
-            err2.message === "invalid signature")
+            err2.message === "invalid signature" ||
+            err2.message === "jwt must be provided")
         ) {
-          return res.redirect("http://localhost:3000");
+          console.log("The error is : ", err2);
+          return res.status(401).json({ error: "JWT error" });
         } else throw err2;
       }
       // console.log("Token verified at /booked/:id");
@@ -37,7 +39,7 @@ const getBooking = async (req, res) => {
     });
   } catch (e) {
     console.log(e);
-    res.json({ error: "Something Went Wrong" });
+    res.status(500).json({ error: "Something Went Wrong" });
   }
 };
 
@@ -111,14 +113,6 @@ const Payment = async (req, res) => {
 
 const BookTable = async (req, res) => {
   try {
-    // const { token } = req.cookies;
-    // jwt.verify(token, secretKey, {}, async (err2, info2) => {
-    //   if (err2) {
-    //     throw err2;
-    //   }
-
-    // console.log("token verified at the booking of table");
-
     const { hotel, tableSelected, slotSelected, curruseremail } = req.body;
 
     let myhotel = await Hotels.findOne({ _id: req.params.id });
@@ -169,10 +163,9 @@ const BookTable = async (req, res) => {
     let result2 = await booking.save();
 
     res.status(200).json({ id: result2._id });
-    // });
   } catch (e) {
     console.log(e);
-    res.json({ error: "Something Went Wrong" });
+    res.status(500).json({ error: "Something Went Wrong" });
   }
 };
 

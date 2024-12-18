@@ -68,6 +68,7 @@ const userlogin = async (req, res) => {
             sameSite: "None",
             secure: true,
           })
+          .status(200)
           .json({
             userId: user._id,
             username: user.username,
@@ -133,7 +134,7 @@ const getUserInfo = async (req, res) => {
       let bookings = await Bookings.find({ email });
       bookings = bookings.reverse();
 
-      res.json({ user, bookings });
+      res.status(200).json({ user, bookings });
     });
   } catch (error) {
     console.error("Error fetching user:", error);
@@ -190,6 +191,7 @@ const Update_User_Info = async (req, res) => {
           sameSite: "None",
           secure: true,
         })
+        .status(200)
         .json({ name: req.body.newname });
     });
   } catch (e) {
@@ -220,7 +222,7 @@ const user_Delete = async (req, res) => {
     });
   } catch (e) {
     console.log("Error:", e);
-    res.json({ Error: e });
+    res.status(500).json({ Error: e });
   }
 };
 

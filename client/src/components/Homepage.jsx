@@ -55,17 +55,12 @@ function Homepage() {
     });
 
     result = await result.json();
-    // console.log("here");
-
-    // if (result.error) {
-    //   alert(result.Error);
-    // }
 
     let username = result.info.username;
 
     setCurruser(username);
     setIsuser(true);
-    // console.log("UserInfo2 is ", result);
+    
     sethotels(result.hotels);
   }
 

@@ -18,12 +18,6 @@ const port = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(cookieParser());
-// app.use(
-//   cors({
-//     origin: `${process.env.REACT_APP_Front_End}`,
-//     credentials: true,
-//   })
-// );
 
 const allowedOrigins = [
   "http://localhost:3000",
@@ -81,12 +75,16 @@ app.use((req, res, next) => {
   next();
 });
 
+app.get("/favicon.ico", (req, res) => {
+  res.sendFile(path.join(__dirname, "../client/build/favicon.ico"));
+});
+
 app.use("/api/hotel/", hotelRoutes);
 app.use("/api/user/", userRoutes);
 app.use("/api/manager/", managerRoutes);
 app.use("/api/booking/", bookingRoutes);
 
-app.post("/profile", (req, res) => {
+app.get("/profile", (req, res) => {
   console.log("Got the request");
 
   try {
@@ -99,33 +97,33 @@ app.post("/profile", (req, res) => {
             throw err2;
           }
           console.log("Info2 is ", info2);
-          res.json(info2);
+          res.status(200).json(info2);
         });
       } else {
         console.log("from here, Info is ", info);
-        res.json(info);
+        res.status(200).json(info);
       }
     });
   } catch (e) {
-    res.json({ error: "Something Went Wrong" });
+    res.status(200).json({ error: "No Token found OR Something Went Wrong" });
   }
 });
 
-app.post("/profileofmanager", (req, res) => {
-  try {
-    const { token } = req.cookies;
+// app.get("/profileofmanager", (req, res) => {
+//   try {
+//     const { token } = req.cookies;
 
-    jwt.verify(token, managersecretKey, {}, (err, info) => {
-      if (err) throw err;
-      console.log("Info is ", info);
-      res.json(info);
-    });
-  } catch (e) {
-    res.json({ error: "Something Went Wrong" });
-  }
-});
+//     jwt.verify(token, managersecretKey, {}, (err, info) => {
+//       if (err) throw err;
+//       console.log("Info is ", info);
+//       res.status(200).json(info);
+//     });
+//   } catch (e) {
+//     res.status(500).json({ error: "Something Went Wrong" });
+//   }
+// });
 
-app.post("/logout", async (req, res) => {
+app.get("/logout", async (req, res) => {
   try {
     res
       .cookie("token", " ", {
@@ -133,24 +131,15 @@ app.post("/logout", async (req, res) => {
         secure: true,
         expire: new Date(0),
       })
+      .status(200)
       .json("ok");
   } catch (e) {
-    res.json({ error: "Something Went Wrong" });
+    res.status(500).json({ error: "Something Went Wrong" });
   }
 });
 
-// app.get("/test",(req,res) => {
-//   res.send('Server is working');
-// });
-
-// app.use((req, res, next) => {
-//   res.status(404).json({ error_not_found: "page not found" });
-// });
-
-// console.log(path.resolve(__dirname, "../client/build", "index.html"));
-
 app.get("*", (req, res) => {
-  const buildPath = path.join(__dirname, "../client/build", "index.html");
+  const buildPath = path.resolve(__dirname, "../client/build", "index.html");
   if (fs.existsSync(buildPath)) {
     res.sendFile(buildPath);
   } else {
