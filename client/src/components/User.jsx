@@ -36,7 +36,7 @@ const User = () => {
         navigate("/");
       } else {
         let result = await fetch(
-          process.env.REACT_APP_Host_Api + `/user/${id}`,
+          process.env.REACT_APP_Host_Api + `/api/user/${id}`,
           {
             method: "PUT",
             body: JSON.stringify({ curruseremail }),
@@ -60,19 +60,22 @@ const User = () => {
   }
 
   async function update() {
-    let result = await fetch(process.env.REACT_APP_Host_Api + `/user/${id}`, {
-      method: "POST",
-      body: JSON.stringify({
-        curruseremail,
-        newname,
-        newphn,
-        newpwd,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
+    let result = await fetch(
+      process.env.REACT_APP_Host_Api + `/api/user/${id}`,
+      {
+        method: "POST",
+        body: JSON.stringify({
+          curruseremail,
+          newname,
+          newphn,
+          newpwd,
+        }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
 
     result = await result.json();
 
@@ -81,15 +84,17 @@ const User = () => {
   }
 
   async function deleteacc() {
-    
-    let result = await fetch(process.env.REACT_APP_Host_Api + "/userdelete", {
-      method: "DELETE",
-      body: JSON.stringify({ curruseremail }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
+    let result = await fetch(
+      process.env.REACT_APP_Host_Api + "/api/user/delete",
+      {
+        method: "DELETE",
+        body: JSON.stringify({ curruseremail }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
     result = await result.json();
 
     if (result.error) {

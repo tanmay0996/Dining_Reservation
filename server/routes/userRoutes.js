@@ -9,11 +9,11 @@ const {
   user_Delete,
 } = require("../controllers/userController");
 
-router.post("/usersignup", userSignup);
-router.post("/userlogin", userlogin);
-router.post("/user/:id", Update_User_Info);
-router.put("/user/:id", getUserInfo);
-router.post("/userforgotpassword", userForgotPassword);
-router.delete("/userdelete", user_Delete);
+router.post("/signup", userSignup);
+router.post("/login", userlogin);
+router.post("/forgotpassword", userForgotPassword);
+router.delete("/delete", user_Delete);
+router.post("/:id", Update_User_Info);
+router.put("/:id", getUserInfo);
 
 module.exports = router;

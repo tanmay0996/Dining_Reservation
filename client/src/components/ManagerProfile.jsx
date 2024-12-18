@@ -38,7 +38,7 @@ const ManagerProfile = () => {
       let hotelsearch = event.target.value;
 
       let result = await fetch(
-        process.env.REACT_APP_Host_Api + `/managerprofile/${id}`,
+        process.env.REACT_APP_Host_Api + `/manager/profile/${id}`,
         {
           method: "PUT",
           body: JSON.stringify({ curruseremail, hotelsearch }),
@@ -66,7 +66,7 @@ const ManagerProfile = () => {
         navigate("/");
       } else {
         let result = await fetch(
-          process.env.REACT_APP_Host_Api + `/managerprofile/${id}`,
+          process.env.REACT_APP_Host_Api + `/api/manager/profile/${id}`,
           {
             method: "PUT",
             body: JSON.stringify({ curruseremail }),
@@ -107,7 +107,7 @@ const ManagerProfile = () => {
     // );
 
     let result = await fetch(
-      process.env.REACT_APP_Host_Api + `/managerprofile/${id}`,
+      process.env.REACT_APP_Host_Api + `/api/manager/profile/${id}`,
       {
         method: "POST",
         body: JSON.stringify({

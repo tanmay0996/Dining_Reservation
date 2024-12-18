@@ -27,7 +27,7 @@ const Signup = () => {
   }, [id, curruser, curruseremail, isuser]);
 
   async function handleSubmit() {
-    let result = await fetch(process.env.REACT_APP_Host_Api + "/usersignup", {
+    let result = await fetch(process.env.REACT_APP_Host_Api + "/api/user/signup", {
       method: "POST",
       body: JSON.stringify({ username, pwd, email, phn }),
       headers: {

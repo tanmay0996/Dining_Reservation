@@ -32,7 +32,7 @@ const ManagerSignup = () => {
 
   async function handleSubmit() {
     let result = await fetch(
-      process.env.REACT_APP_Host_Api + "/managersignup",
+      process.env.REACT_APP_Host_Api + "/api/manager/signup",
       {
         method: "POST",
         body: JSON.stringify({

@@ -66,7 +66,7 @@ const AddHotel = () => {
       formData.append("img2", img2);
 
       let result = await fetch(
-        process.env.REACT_APP_Host_Api + `/manager/${id}/addhotel`,
+        process.env.REACT_APP_Host_Api + `/api/manager/${id}/addhotel`,
         {
           method: "POST",
           body: formData,

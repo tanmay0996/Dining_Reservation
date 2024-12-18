@@ -36,7 +36,7 @@ app.get("/success", async (req, res) => {
       const hotel = { _id: id };
 
       const response = await axios.post(
-        `${process.env.REACT_APP_Host_Api}/hotel/${id}/book`,
+        `${process.env.REACT_APP_Host_Api}/api/booking/hotel/${id}/book`,
         {
           hotel,
           tableSelected,

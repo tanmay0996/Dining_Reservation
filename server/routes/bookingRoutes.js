@@ -6,8 +6,8 @@ const {
   BookTable,
 } = require("../controllers/bookingController");
 
-routes.get("/user/:id/booked/:id1", getBooking);
 routes.post("/payment", Payment);
+routes.get("/user/:id/booked/:id1", getBooking);
 routes.post("/hotel/:id/book", BookTable);
 
 module.exports = routes;

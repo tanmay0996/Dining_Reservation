@@ -7,7 +7,7 @@ const {
   managerForgotPassword,
   Update_Manager_Info,
   get_ManagerInfo_and_HotelInfo,
-  addHotel
+  addHotel,
 } = require("../controllers/managerController");
 
 const corsOptions = {
@@ -15,11 +15,11 @@ const corsOptions = {
   credentials: true,
 };
 
-router.post("/manager/:id/addhotel", cors(corsOptions), addHotel);
-router.post("/managersignup", managerSignup);
-router.post("/managerlogin", managerLogin);
-router.post("/managerforgotpassword", managerForgotPassword);
-router.post("/managerprofile/:id", Update_Manager_Info);
-router.put("/managerprofile/:id", get_ManagerInfo_and_HotelInfo);
+router.post("/signup", managerSignup);
+router.post("/login", managerLogin);
+router.post("/forgotpassword", managerForgotPassword);
+router.post("/profile/:id", Update_Manager_Info);
+router.put("/profile/:id", get_ManagerInfo_and_HotelInfo);
+router.post("/:id/addhotel", cors(corsOptions), addHotel);
 
 module.exports = router;

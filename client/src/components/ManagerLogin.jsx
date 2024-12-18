@@ -27,7 +27,7 @@ const Login = () => {
   async function handleSubmit() {
     try {
       let result = await fetch(
-        process.env.REACT_APP_Host_Api + "/managerlogin",
+        process.env.REACT_APP_Host_Api + "/api/manager/login",
         {
           method: "POST",
           body: JSON.stringify({ email, pwd }),

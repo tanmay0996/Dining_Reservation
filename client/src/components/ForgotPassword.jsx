@@ -24,7 +24,7 @@ const ForgotPassword = () => {
 
   async function handleSubmit() {
     let result = await fetch(
-      process.env.REACT_APP_Host_Api + `/userforgotpassword`,
+      process.env.REACT_APP_Host_Api + `/api/user/forgotpassword`,
       {
         method: "POST",
         body: JSON.stringify({ email, pwd }),

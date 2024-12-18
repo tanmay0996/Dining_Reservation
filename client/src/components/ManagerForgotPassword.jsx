@@ -17,7 +17,7 @@ const ManagerForgotPassword = () => {
 
   async function handleSubmit() {
     let result = await fetch(
-      process.env.REACT_APP_Host_Api + `/managerforgotpassword`,
+      process.env.REACT_APP_Host_Api + `/api/manager/forgotpassword`,
       {
         method: "POST",
         body: JSON.stringify({ email, pwd }),

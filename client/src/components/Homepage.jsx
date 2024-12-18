@@ -25,7 +25,7 @@ function Homepage() {
     if (event && event.target) {
       let hotelsearch = event.target.value;
 
-      let result = await fetch(process.env.REACT_APP_Host_Api+"/api", {
+      let result = await fetch(process.env.REACT_APP_Host_Api+"/api/hotel", {
         method: "POST",
         body: JSON.stringify({ hotelsearch }),
         headers: {
@@ -46,7 +46,7 @@ function Homepage() {
 
   async function gethotels() {
 
-    let result = await fetch(process.env.REACT_APP_Host_Api+"/api", {
+    let result = await fetch(process.env.REACT_APP_Host_Api+"/api/hotel", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

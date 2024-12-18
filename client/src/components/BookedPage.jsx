@@ -20,7 +20,7 @@ const BookedPage = () => {
     // navigate("/");
     // } else {
     let result = await fetch(
-      process.env.REACT_APP_Host_Api + `/user/${id}/booked/${params.id1}`,
+      process.env.REACT_APP_Host_Api + `/api/booking/user/${id}/booked/${params.id1}`,
       {
         method: "GET",
         headers: {

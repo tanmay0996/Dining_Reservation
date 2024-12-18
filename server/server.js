@@ -41,14 +41,14 @@ app.use(
   })
 );
 
-// mongoose
-//   .connect("mongodb://127.0.0.1:27017/hotel_table_booking")
-//   .then(() => {
-//     console.log("Connected to MongoDB");
-//   })
-//   .catch((e) => {
-//     console.log("Database Connection error : ", e);
-//   });
+mongoose
+  .connect("mongodb://127.0.0.1:27017/hotel_table_booking")
+  .then(() => {
+    console.log("Connected to MongoDB");
+  })
+  .catch((e) => {
+    console.log("Database Connection error : ", e);
+  });
 
 console.log(__dirname + "../client/build");
 app.use(express.static(path.join(__dirname, "../client/build")));
@@ -62,14 +62,14 @@ const clientOptions = {
   serverApi: { version: "1", strict: true, deprecationErrors: true },
 };
 
-mongoose
-  .connect(mongodb_url, clientOptions)
-  .then(() => {
-    console.log("Connected to Mongo");
-  })
-  .catch((e) => {
-    console.log("Database connection Error ", e);
-  });
+// mongoose
+//   .connect(mongodb_url, clientOptions)
+//   .then(() => {
+//     console.log("Connected to Mongo");
+//   })
+//   .catch((e) => {
+//     console.log("Database connection Error ", e);
+//   });
 
 const hotelRoutes = require("./routes/hotelRoutes.js");
 const userRoutes = require("./routes/userRoutes.js");
@@ -81,11 +81,10 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/", hotelRoutes);
-app.use("/hotel", hotelRoutes);
-app.use("/", userRoutes);
-app.use("/", managerRoutes);
-app.use("/", bookingRoutes);
+app.use("/api/hotel/", hotelRoutes);
+app.use("/api/user/", userRoutes);
+app.use("/api/manager/", managerRoutes);
+app.use("/api/booking/", bookingRoutes);
 
 app.post("/profile", (req, res) => {
   console.log("Got the request");
