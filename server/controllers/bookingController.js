@@ -94,7 +94,9 @@ const Payment = async (req, res) => {
           token
         )}`,
 
-        cancel_url: `${process.env.REACT_APP_Front_End}/cancel/${id}/${tableSelected}/${slotSelected}`,
+        cancel_url: `${req.protocol}://${req.get(
+          "host"
+        )}/cancel/${id}/${tableSelected}/${slotSelected}`,
       });
 
       res.cookie("token", token, {
