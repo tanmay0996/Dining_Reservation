@@ -15,8 +15,8 @@ const Login = () => {
   } = useContext(UserContext);
 
   const navigate = useNavigate();
-  const [email, setEmail] = useState("1663ankesh@gmail.com");
-  const [pwd, setPwd] = useState("abc");
+  const [email, setEmail] = useState("");
+  const [pwd, setPwd] = useState("");
 
   useEffect(() => {
     if (curruser) {
