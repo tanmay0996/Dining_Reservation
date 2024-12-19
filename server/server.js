@@ -44,8 +44,8 @@ app.use(
 //     console.log("Database Connection error : ", e);
 //   });
 
-console.log(__dirname + "../client/build");
-app.use(express.static(path.join(__dirname, "../client/build")));
+console.log(__dirname + "./client/build");
+app.use(express.static(path.join(__dirname, "./client/build")));
 
 app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
 
@@ -76,7 +76,7 @@ app.use((req, res, next) => {
 });
 
 app.get("/favicon.ico", (req, res) => {
-  res.sendFile(path.join(__dirname, "../client/build/favicon.ico"));
+  res.sendFile(path.join(__dirname, "./client/build/favicon.ico"));
 });
 
 app.use("/api/hotel/", hotelRoutes);
@@ -139,7 +139,7 @@ app.get("/logout", async (req, res) => {
 });
 
 app.get("*", (req, res) => {
-  const buildPath = path.resolve(__dirname, "../client/build", "index.html");
+  const buildPath = path.resolve(__dirname, "./client/build", "index.html");
   if (fs.existsSync(buildPath)) {
     res.sendFile(buildPath);
   } else {
