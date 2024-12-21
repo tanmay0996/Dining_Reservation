@@ -2,8 +2,7 @@
 
 ## Overview
 
-This is a MERN stack project designed to *manage hotel table bookings efficiently*. The application has separate functionalities for users and managers, with Stripe payment integration for seamless transactions.
-
+This is a MERN stack project designed to _manage hotel table bookings efficiently_. The application has separate functionalities for users and managers, with Stripe payment integration for seamless transactions.
 
 ## Features
 
@@ -15,8 +14,7 @@ This is a MERN stack project designed to *manage hotel table bookings efficientl
 
 **Table Booking:** Users can book tables for a specific slot in any hotel, restricted to the current day.
 
-**Payment Integration:** *Stripe* integration ensures secure and reliable payment processing.
-
+**Payment Integration:** _Stripe_ integration ensures secure and reliable payment processing.
 
 ## Technologies Used
 
@@ -28,10 +26,9 @@ This is a MERN stack project designed to *manage hotel table bookings efficientl
 
 **Payment Gateway:** Stripe
 
-
 ## Project Structure
 
-hotel-dining-reservation-system
+```hotel-dining-reservation-system
 |-- server
 |   |-- client
 |       |-- public
@@ -52,7 +49,7 @@ hotel-dining-reservation-system
 |   |-- server.js
 |   |-- stripe.js
 |-- README.md
-
+```
 
 ## Usage
 
@@ -72,11 +69,9 @@ hotel-dining-reservation-system
 
 3.  Complete the payment using Stripe.
 
-
 ## Stripe Payment Integration
 
-Stripe is used for secure payment transactions during the booking process. 
-
+Stripe is used for secure payment transactions during the booking process.
 
 ## Deployment
 
@@ -85,4 +80,3 @@ The project is deployed and accessible at: [https://hotel-dining-reservation-sys
 ## Contact
 
 For queries or feedback, please contact the project owner at [1663ankesh@gmail.com](1663ankesh@gmail.com).
-
