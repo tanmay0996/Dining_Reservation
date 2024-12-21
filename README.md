@@ -1,4 +1,4 @@
-# Hotel Table Booking Management System
+# Hotel Dining Reseervation System
 
 ## Overview
 
