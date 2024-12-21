@@ -1,4 +1,4 @@
-# Hotel Dining Reseervation System 🍽️
+# Hotel Dining Reservation System 🍽️
 
 ## Overview 📋
 
