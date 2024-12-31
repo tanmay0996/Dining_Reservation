@@ -22,7 +22,7 @@ const Login = () => {
     if (curruser) {
       navigate(`/managerprofile/${id}`);
     }
-  }, [curruser, curruseremail, isuser]);
+  }, [curruser, curruseremail, isuser, navigate, id]);
 
   async function handleSubmit() {
     try {
@@ -97,7 +97,10 @@ const Login = () => {
             <button
               type="submit"
               className="submit-btn"
-              onClick={() => (setEmail(""), setPwd(""))}
+              onClick={() => {
+                setEmail("");
+                setPwd("");
+              }}
             >
               Reset
             </button>

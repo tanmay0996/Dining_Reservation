@@ -4,14 +4,7 @@ import { UserContext } from "../UserContext";
 
 const ForgotPassword = () => {
   let navigate = useNavigate();
-  const {
-    curruser,
-    curruseremail,
-    isuser,
-    // setCurruser,
-    // setCurruseremail,
-    // setIsuser,
-  } = useContext(UserContext);
+  const { curruser, curruseremail, isuser } = useContext(UserContext);
 
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
@@ -20,7 +13,7 @@ const ForgotPassword = () => {
     if (curruser) {
       navigate("/");
     }
-  }, [curruser, curruseremail, isuser]);
+  }, [curruser, curruseremail, isuser, navigate]);
 
   async function handleSubmit() {
     let result = await fetch(

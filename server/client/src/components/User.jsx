@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { UserContext } from "../UserContext";
 import { useNavigate } from "react-router-dom";
 
@@ -23,12 +23,7 @@ const User = () => {
     isuser,
   } = useContext(UserContext);
 
-  useEffect(() => {
-    getuser();
-    setnewpwd("");
-  }, [id, toupdate, curruser, curruseremail, setIsuser, isuser]);
-
-  async function getuser() {
+  const getuser = useCallback(async () => {
     try {
       if (!isuser || !curruseremail || !curruser) {
         navigate("/");
@@ -53,9 +48,15 @@ const User = () => {
         setBookings(result.bookings);
       }
     } catch (error) {
-      console.error("Error fetching user:", error);
+      alert("Error fetching user details");
+      console.error("Error fetching user details : ", error);
     }
-  }
+  }, [isuser, curruseremail, curruser, navigate, id]);
+
+  useEffect(() => {
+    getuser();
+    setnewpwd("");
+  }, [id, toupdate, curruser, curruseremail, setIsuser, isuser, getuser]);
 
   async function update() {
     let result = await fetch(

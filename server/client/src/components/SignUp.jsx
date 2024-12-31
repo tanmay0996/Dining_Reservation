@@ -3,16 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { UserContext } from "../UserContext";
 
 const Signup = () => {
-  const {
-    id,
-    setId,
-    curruser,
-    curruseremail,
-    isuser,
-    setCurruser,
-    // setCurruseremail,
-    // setIsuser,
-  } = useContext(UserContext);
+  const { id, setId, curruser, curruseremail, isuser, setCurruser } =
+    useContext(UserContext);
 
   const [username, setUsername] = useState("");
   const [pwd, setpwd] = useState("");
@@ -24,17 +16,20 @@ const Signup = () => {
     if (curruser) {
       navigate("/");
     }
-  }, [id, curruser, curruseremail, isuser]);
+  }, [id, curruser, curruseremail, isuser, navigate]);
 
   async function handleSubmit() {
-    let result = await fetch(process.env.REACT_APP_Host_Api + "/api/user/signup", {
-      method: "POST",
-      body: JSON.stringify({ username, pwd, email, phn }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
+    let result = await fetch(
+      process.env.REACT_APP_Host_Api + "/api/user/signup",
+      {
+        method: "POST",
+        body: JSON.stringify({ username, pwd, email, phn }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
 
     result = await result.json();
 
@@ -111,9 +106,12 @@ const Signup = () => {
             <button
               type="submit"
               className="submit-btn"
-              onClick={() => (
-                setUsername(""), setEmail(""), setPhn(""), setpwd("")
-              )}
+              onClick={() => {
+                setUsername("");
+                setEmail("");
+                setPhn("");
+                setpwd("");
+              }}
             >
               Reset
             </button>

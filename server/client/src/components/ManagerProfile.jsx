@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { UserContext } from "../UserContext";
 import { useNavigate } from "react-router-dom";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
@@ -14,7 +14,7 @@ import FeaturedPlayListIcon from "@mui/icons-material/FeaturedPlayList";
 
 const ManagerProfile = () => {
   let { id, curruser, curruseremail, setCurruser, isuser } =
-    useContext(UserContext); //setCurruseremail,
+    useContext(UserContext);
 
   const navigate = useNavigate();
 
@@ -27,11 +27,6 @@ const ManagerProfile = () => {
   const [newpan, setnewpan] = useState("");
   const [newaddress, setnewaddress] = useState("");
   const [hotels, setHotels] = useState([]);
-
-  useEffect(() => {
-    getmanagerinfo();
-    setnewpwd("");
-  }, [id, curruseremail, curruser, toupdate]);
 
   async function searchhotels(event) {
     if (event && event.target) {
@@ -58,7 +53,7 @@ const ManagerProfile = () => {
     }
   }
 
-  async function getmanagerinfo() {
+  const getmanagerinfo = useCallback(async () => {
     try {
       if (!curruseremail) {
         navigate("/managerlogin");
@@ -91,21 +86,17 @@ const ManagerProfile = () => {
         setHotels(hotels);
       }
     } catch (e) {
-      console.log({ error: e });
+      alert("Error getting the manager info");
+      console.log("Error getting the manager info: ", e);
     }
-  }
+  }, [navigate, curruseremail, isuser, id]);
+
+  useEffect(() => {
+    getmanagerinfo();
+    setnewpwd("");
+  }, [id, curruseremail, curruser, toupdate, getmanagerinfo]);
 
   async function update() {
-    // console.log(
-    //   curruseremail,
-    //   newname,
-    //   newphn,
-    //   newpwd,
-    //   newaddress,
-    //   newaadhar,
-    //   newpan
-    // );
-
     let result = await fetch(
       process.env.REACT_APP_Host_Api + `/api/manager/profile/${id}`,
       {
@@ -129,9 +120,7 @@ const ManagerProfile = () => {
     result = await result.json();
 
     setToupdate(!toupdate);
-    // console.log(curruser, " changed to ", result.name);
     setCurruser(result.name);
-    // console.log("Now curruser is ", curruser);
   }
 
   return !toupdate ? (

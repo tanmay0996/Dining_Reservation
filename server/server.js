@@ -24,11 +24,6 @@ const userRoutes = require("./routes/userRoutes.js");
 const bookingRoutes = require("./routes/bookingRoutes.js");
 const managerRoutes = require("./routes/managerRoutes.js");
 
-app.use((req, res, next) => {
-  console.log(`Request Method: ${req.method}, Request URL: ${req.url}`);
-  next();
-});
-
 app.get("/favicon.ico", (req, res) => {
   res.sendFile(path.join(__dirname, "./client/build/favicon.ico"));
 });
@@ -50,11 +45,9 @@ app.get("/profile", (req, res) => {
           if (err2) {
             throw err2;
           }
-          console.log("Info2 is ", info2);
           res.status(200).json(info2);
         });
       } else {
-        console.log("from here, Info is ", info);
         res.status(200).json(info);
       }
     });
@@ -62,20 +55,6 @@ app.get("/profile", (req, res) => {
     res.status(200).json({ error: "No Token found OR Something Went Wrong" });
   }
 });
-
-// app.get("/profileofmanager", (req, res) => {
-//   try {
-//     const { token } = req.cookies;
-
-//     jwt.verify(token, managersecretKey, {}, (err, info) => {
-//       if (err) throw err;
-//       console.log("Info is ", info);
-//       res.status(200).json(info);
-//     });
-//   } catch (e) {
-//     res.status(500).json({ error: "Something Went Wrong" });
-//   }
-// });
 
 app.get("/logout", async (req, res) => {
   try {

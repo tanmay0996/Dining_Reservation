@@ -15,7 +15,7 @@ function BookTable() {
     if (!curruser || curruseremail === undefined) {
       navigate("/");
     }
-  }, [curruser, curruseremail, hotel, tableSelected, slotSelected]);
+  }, [curruser, curruseremail, hotel, tableSelected, slotSelected, navigate]);
 
   async function payment() {
     const stripe = await loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
@@ -42,8 +42,7 @@ function BookTable() {
     }
 
     const session = await res.json();
-    // console.log(session);
-
+    
     const result = stripe.redirectToCheckout({
       sessionId: session.id,
     });

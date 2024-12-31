@@ -28,7 +28,7 @@ const ManagerSignup = () => {
     if (curruser) {
       navigate(`/managerprofile/${id}`);
     }
-  }, [curruser, curruseremail, isuser, id]);
+  }, [curruser, curruseremail, isuser, id, navigate]);
 
   async function handleSubmit() {
     let result = await fetch(
@@ -168,15 +168,15 @@ const ManagerSignup = () => {
             <button
               type="submit"
               className="submit-btn"
-              onClick={() => (
-                setName(""),
-                setEmail(""),
-                setPhn(""),
-                setpwd(""),
-                setAddress(""),
-                setAadhar(""),
-                setPan("")
-              )}
+              onClick={() => {
+                setName("");
+                setEmail("");
+                setPhn("");
+                setpwd("");
+                setAddress("");
+                setAadhar("");
+                setPan("");
+              }}
             >
               Reset
             </button>

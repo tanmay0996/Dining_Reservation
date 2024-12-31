@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { UserContext } from "../UserContext";
 import jsPDF from "jspdf";
@@ -10,34 +10,35 @@ const BookedPage = () => {
   const navigate = useNavigate();
   const [bookingdetail, setBookingdetail] = useState({});
 
+  const getbookingdetails = useCallback(async () => {
+    try {
+      let result = await fetch(
+        process.env.REACT_APP_Host_Api +
+          `/api/booking/user/${id}/booked/${params.id1}`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+        }
+      );
+
+      result = await result.json();
+      if (result.error) {
+        alert(result.error);
+        navigate("/");
+      }
+      setBookingdetail(result);
+    } catch (e) {
+      alert("Error fetching the booking details");
+      console.log("Error fetching the booking details : ", e);
+    }
+  }, [id, params.id1, navigate, setBookingdetail]);
+
   useEffect(() => {
     getbookingdetails();
-  }, [id, isuser, curruser, curruseremail]);
-
-  async function getbookingdetails() {
-    // if (isuser || !curruser || !curruseremail) {
-    // console.log("booking page ", isuser, curruser, curruseremail);
-    // navigate("/");
-    // } else {
-    let result = await fetch(
-      process.env.REACT_APP_Host_Api + `/api/booking/user/${id}/booked/${params.id1}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-      }
-    );
-
-    result = await result.json();
-    if (result.error) {
-      alert(result.error);
-      navigate("/");
-    }
-    setBookingdetail(result);
-    // }
-  }
+  }, [id, isuser, curruser, curruseremail, getbookingdetails]);
 
   const generateReceipt = () => {
     const doc = new jsPDF();

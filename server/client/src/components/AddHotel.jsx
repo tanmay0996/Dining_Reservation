@@ -28,7 +28,7 @@ const AddHotel = () => {
     if (isuser || !curruser || !curruseremail || !id) {
       navigate("/");
     }
-  }, [id, curruser, curruseremail, isuser]);
+  }, [id, curruser, curruseremail, isuser, navigate]);
 
   const onImg1Change = (e) => {
     const file = e.target.files[0];

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useCallback, useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../UserContext";
 
@@ -15,33 +15,37 @@ const Navbar = () => {
   } = useContext(UserContext);
   const navigate = useNavigate();
 
+  const profile = useCallback(async () => {
+    try {
+      let result = await fetch(`${process.env.REACT_APP_Host_Api}/profile`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      });
+      result = await result.json();
+
+      setCurruseremail(result?.email);
+      if (result.username) {
+        setId(result.userId);
+        setCurruser(result?.username);
+        setIsuser(true);
+      } else {
+        setId(result.managerId);
+        setCurruser(result?.managername);
+        setIsuser(false);
+      }
+    } catch (e) {
+      alert("Error fetching profile details");
+      console.log("Error fetching profile details : ", e);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[]);
+
   useEffect(() => {
     profile();
-    // console.log("From Navbar, Curruser ", curruser);
-  }, [id, curruser, curruseremail, isuser]);
-
-  async function profile() {
-    
-    let result = await fetch(`${process.env.REACT_APP_Host_Api}/profile`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
-    result = await result.json();
-
-    setCurruseremail(result?.email);
-    if (result.username) {
-      setId(result.userId);
-      setCurruser(result?.username);
-      setIsuser(true);
-    } else {
-      setId(result.managerId);
-      setCurruser(result?.managername);
-      setIsuser(false);
-    }
-  }
+  }, [id, curruser, curruseremail, isuser, profile]);
 
   async function logout() {
     await fetch(process.env.REACT_APP_Host_Api + "/logout", {
@@ -52,7 +56,6 @@ const Navbar = () => {
       credentials: "include",
     });
 
-    // window.localStorage.clear();
     setId("");
     setCurruseremail("");
     setCurruser("");

@@ -13,7 +13,7 @@ import PaymentIcon from "@mui/icons-material/Payment";
 
 function Homepage() {
   const [hotels, sethotels] = useState([]);
-  const { setCurruser, setIsuser } = useContext(UserContext); //setCurruseremail, curruser, curruseremail
+  const { setCurruser, setIsuser } = useContext(UserContext);
 
   const navigate = useNavigate();
 
@@ -25,7 +25,7 @@ function Homepage() {
     if (event && event.target) {
       let hotelsearch = event.target.value;
 
-      let result = await fetch(process.env.REACT_APP_Host_Api+"/api/hotel", {
+      let result = await fetch(process.env.REACT_APP_Host_Api + "/api/hotel", {
         method: "POST",
         body: JSON.stringify({ hotelsearch }),
         headers: {
@@ -34,8 +34,7 @@ function Homepage() {
       });
 
       result = await result.json();
-      // sethotels(result);
-      
+
       if (result.hotels) {
         sethotels(result.hotels);
       } else {
@@ -45,8 +44,7 @@ function Homepage() {
   }
 
   async function gethotels() {
-
-    let result = await fetch(process.env.REACT_APP_Host_Api+"/api/hotel", {
+    let result = await fetch(process.env.REACT_APP_Host_Api + "/api/hotel", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -60,7 +58,7 @@ function Homepage() {
 
     setCurruser(username);
     setIsuser(true);
-    
+
     sethotels(result.hotels);
   }
 

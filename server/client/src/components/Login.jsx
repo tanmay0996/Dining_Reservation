@@ -14,17 +14,20 @@ const Login = () => {
     if (curruser) {
       navigate("/");
     }
-  }, [id, curruser, curruseremail, isuser]);
+  }, [id, curruser, curruseremail, isuser, navigate]);
 
   async function handleSubmit() {
-    let result = await fetch(process.env.REACT_APP_Host_Api + "/api/user/login", {
-      method: "POST",
-      body: JSON.stringify({ email, pwd }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-    });
+    let result = await fetch(
+      process.env.REACT_APP_Host_Api + "/api/user/login",
+      {
+        method: "POST",
+        body: JSON.stringify({ email, pwd }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+      }
+    );
 
     result = await result.json();
     if (result.error) {
@@ -72,7 +75,10 @@ const Login = () => {
             <button
               type="submit"
               className="submit-btn"
-              onClick={() => (setEmail(""), setPwd(""))}
+              onClick={() => {
+                setEmail("");
+                setPwd("");
+              }}
             >
               Reset
             </button>
