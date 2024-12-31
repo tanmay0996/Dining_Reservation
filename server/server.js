@@ -1,69 +1,23 @@
 const express = require("express");
 const app = express();
-const cors = require("cors");
-const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
-const cookieParser = require("cookie-parser");
 const path = require("path");
 const fs = require("fs");
 require("dotenv").config();
 
 const updatetablesMiddleware = require("./middleware/updatetablesMiddleware.js");
+const corsMiddleware = require("./middleware/cors.js");
+const connectDatabase = require("./config/db.js");
 
 const secretKey = process.env.secretKey;
 const managersecretKey = process.env.managersecretKey;
-const mongodb_url = process.env.mongodb_url;
-
 const port = process.env.PORT || 5000;
 
-app.use(express.json());
-app.use(cookieParser());
-
-const allowedOrigins = [
-  "http://localhost:3000",
-  `${process.env.REACT_APP_Front_End}`,
-  `${process.env.REACT_APP_Host_Api}`,
-  `${process.env.REACT_APP_Stripe_Server}`,
-];
-
-app.use(
-  cors({
-    origin: allowedOrigins,
-    methods: "GET,PUT,POST,DELETE",
-    credentials: true,
-    optionsSuccessStatus: 204,
-  })
-);
-
-// mongoose
-//   .connect("mongodb://127.0.0.1:27017/hotel_table_booking")
-//   .then(() => {
-//     console.log("Connected to MongoDB");
-//   })
-//   .catch((e) => {
-//     console.log("Database Connection error : ", e);
-//   });
-
-console.log(__dirname + "./client/build");
-app.use(express.static(path.join(__dirname, "./client/build")));
-
-app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
+corsMiddleware(app);
+connectDatabase();
 
 app.use(updatetablesMiddleware);
 app.use(express.urlencoded({ extended: true }));
-
-const clientOptions = {
-  serverApi: { version: "1", strict: true, deprecationErrors: true },
-};
-
-mongoose
-  .connect(mongodb_url, clientOptions)
-  .then(() => {
-    console.log("Connected to Mongo");
-  })
-  .catch((e) => {
-    console.log("Database connection Error ", e);
-  });
 
 const hotelRoutes = require("./routes/hotelRoutes.js");
 const userRoutes = require("./routes/userRoutes.js");

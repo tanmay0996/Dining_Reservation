@@ -40,6 +40,7 @@ This is a MERN stack project designed to _manage hotel table bookings efficientl
 |           |-- index.css
 |           |-- index.js
 |           |-- UserContext.js
+|   |-- config
 |   |-- controllers
 |   |-- middleware
 |   |-- models
