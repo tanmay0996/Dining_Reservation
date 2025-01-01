@@ -96,7 +96,9 @@ const ManagerProfile = () => {
     setnewpwd("");
   }, [id, curruseremail, curruser, toupdate, getmanagerinfo]);
 
-  async function update() {
+  async function update(e) {
+    e.preventDefault();
+
     let result = await fetch(
       process.env.REACT_APP_Host_Api + `/api/manager/profile/${id}`,
       {
@@ -118,7 +120,7 @@ const ManagerProfile = () => {
     );
 
     result = await result.json();
-
+    alert("Profile Updated");
     setToupdate(!toupdate);
     setCurruser(result.name);
   }
@@ -290,26 +292,31 @@ const ManagerProfile = () => {
     </div>
   ) : (
     <div className="managerupdateformbackground">
-      <div className="managerupdateform">
+      <form className="managerupdateform" onSubmit={update}>
         <div className="formheading">Manager's Profile</div>
+
         <div className="field managerformname">
           <label htmlFor="name">Name : </label>
           <input
             type="text"
             placeholder="Username"
             value={newname}
+            required
             onChange={(e) => setnewname(e.target.value)}
           />
         </div>
+
         <div className="field managerformemail">
           <label htmlFor="name">Email : </label>
           <input
-            type="text"
-            placeholder="Username"
+            type="email"
+            placeholder="Email"
             disabled
+            required
             value={curruseremail}
           />
         </div>
+
         <div className="field managerformphn">
           <label htmlFor="name">Phone : </label>
           <input
@@ -317,18 +324,22 @@ const ManagerProfile = () => {
             placeholder="Username"
             value={newphn}
             maxLength={10}
+            required
             onChange={(e) => setnewphn(e.target.value)}
           />
         </div>
+
         <div className="field managerformaddress">
           <label htmlFor="name">Address : </label>
           <input
             type="text"
             placeholder="Username"
             value={newaddress}
+            required
             onChange={(e) => setnewaddress(e.target.value)}
           />
         </div>
+
         <div className="field managerformaadhar">
           <label htmlFor="name">Aadhar : </label>
           <input
@@ -336,18 +347,22 @@ const ManagerProfile = () => {
             placeholder="Username"
             value={newaadhar}
             maxLength={12}
+            required
             onChange={(e) => setnewaadhar(e.target.value)}
           />
         </div>
+
         <div className="field managerformpan">
           <label htmlFor="name">Pan : </label>
           <input
             type="text"
             placeholder="Username"
             value={newpan}
+            required
             onChange={(e) => setnewpan(e.target.value)}
           />
         </div>
+
         <div className="field managerformpwd">
           <label htmlFor="name">New Password : </label>
           <input
@@ -357,15 +372,18 @@ const ManagerProfile = () => {
             onChange={(e) => setnewpwd(e.target.value)}
           />
         </div>
+
         <div className="formbtns">
           <div className="managerupdatebtn">
-            <button onClick={update}>Update</button>
+            <button type="submit">Update</button>
           </div>
           <div className="managerbackbtn">
-            <button onClick={() => setToupdate(!toupdate)}>Back</button>
+            <button type="button" onClick={() => setToupdate(!toupdate)}>
+              Back
+            </button>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

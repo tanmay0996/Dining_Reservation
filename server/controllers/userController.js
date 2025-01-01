@@ -44,8 +44,6 @@ const userSignup = async (req, res) => {
 
 const userlogin = async (req, res) => {
   try {
-    console.log("I am here");
-
     const { email, pwd } = req.body;
     if (!email || !pwd) {
       return res.status(400).json({ error: "Fill Up the form" });
@@ -88,7 +86,6 @@ const userlogin = async (req, res) => {
 
 const userForgotPassword = async (req, res) => {
   try {
-
     const { email, pwd } = req.body;
 
     if (!email || !pwd) {
@@ -125,8 +122,6 @@ const getUserInfo = async (req, res) => {
       if (err2) {
         throw err2;
       }
-
-      console.log("token verified at /user");
 
       let email = req.body.curruseremail;
       let user = await Users.findOne({ email });

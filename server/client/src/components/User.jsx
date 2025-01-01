@@ -58,7 +58,9 @@ const User = () => {
     setnewpwd("");
   }, [id, toupdate, curruser, curruseremail, setIsuser, isuser, getuser]);
 
-  async function update() {
+  async function update(e) {
+    e.preventDefault();
+
     let result = await fetch(
       process.env.REACT_APP_Host_Api + `/api/user/${id}`,
       {
@@ -77,7 +79,7 @@ const User = () => {
     );
 
     result = await result.json();
-
+    alert("Profile Updated");
     setToupdate(!toupdate);
     setCurruser(result.name);
   }
@@ -104,7 +106,6 @@ const User = () => {
       setCurruser("");
       setIsuser(false);
       navigate("/");
-      // navigate("/");
     }
   }
 
@@ -159,27 +160,31 @@ const User = () => {
         </div>
       ) : (
         <div className="updateformbackground">
-          <div className="updateform">
+          <form className="updateform" onSubmit={update}>
             <div className="formheading">User's Profile</div>
+
             <div className="field formname">
               <label htmlFor="name">Name : </label>
               <input
                 type="text"
                 placeholder="Username"
-                // disabled
+                required
                 value={newname}
                 onChange={(e) => setnewname(e.target.value)}
               />
             </div>
+
             <div className="field formemail">
               <label htmlFor="name">Email : </label>
               <input
                 type="email"
                 placeholder="Email"
                 disabled
+                required
                 value={curruseremail}
               />
             </div>
+
             <div className="field formphn">
               <label htmlFor="name">Phone : </label>
               <input
@@ -187,9 +192,11 @@ const User = () => {
                 placeholder="Ph. No."
                 value={newphn}
                 maxLength={10}
+                required
                 onChange={(e) => setnewphn(e.target.value)}
               />
             </div>
+
             <div className="field formpwd">
               <label htmlFor="name">New Password : </label>
               <input
@@ -199,15 +206,20 @@ const User = () => {
                 onChange={(e) => setnewpwd(e.target.value)}
               />
             </div>
+
             <div className="formbtns">
-              <div className="updatebtn" onClick={update}>
+              <button type="submit" className="updatebtn">
                 Update
-              </div>
-              <div className="backbtn" onClick={() => setToupdate(!toupdate)}>
+              </button>
+              <button
+                type="button"
+                className="backbtn"
+                onClick={() => setToupdate(!toupdate)}
+              >
                 Back
-              </div>
+              </button>
             </div>
-          </div>
+          </form>
         </div>
       )}
     </div>

@@ -1,5 +1,4 @@
 body {
-  /* background: linear-gradient(to right, #f8f853, #66ff66); */
   background-color: rgb(247, 252, 145);
   min-height: 100vh;
 }
@@ -585,7 +584,7 @@ input:hover {
 }
 .paymentpage {
   font-family: "Poppins", sans-serif;
-  min-width: 600px;
+  max-width: 600px;
   margin: 50px auto;
   border: 4px double black;
   background-color: #ffffff;
@@ -785,33 +784,6 @@ span {
   margin: 50px 0;
 }
 
-/* .managerupdateform {
-  max-width: 400px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-} */
-
-/* .managerupdateform > div {
-  margin-bottom: 15px;
-}
-
-.managerupdateform label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 5px;
-} */
-
-/* .managerupdateform input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-}*/
-
 .managerupdateform button {
   background-color: #3498db;
   color: white;
@@ -827,36 +799,6 @@ span {
 .managerupdateform button:hover {
   background-color: #2980b9;
 }
-
-/* .addhotelform {
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #f5f5f5;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-} */
-
-/* .addhotelform > div {
-  margin-bottom: 15px;
-}
-
-.addhotelform span {
-  font-weight: bold;
-  margin-right: 10px;
-} */
-
-/* .addhotelform input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-sizing: border-box;
-} */
-
-/* .addhotelform input[type="file"] { */
-/* display: none; */
-/* } */
 
 .addhotelform button {
   background-color: #4caf50;
@@ -1171,6 +1113,7 @@ input:disabled {
   .paymentpage button {
     font-size: 15px;
   }
+
   .seehotels .hoteldetails2 {
     border-radius: 20px;
     margin: 20px 0;

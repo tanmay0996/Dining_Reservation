@@ -30,7 +30,9 @@ const ManagerSignup = () => {
     }
   }, [curruser, curruseremail, isuser, id, navigate]);
 
-  async function handleSubmit() {
+  async function handleSubmit(e) {
+    e.preventDefault();
+
     let result = await fetch(
       process.env.REACT_APP_Host_Api + "/api/manager/signup",
       {
@@ -70,8 +72,9 @@ const ManagerSignup = () => {
 
   return (
     <div className="signuppage managersignuppage">
-      <div className="form">
+      <form className="form" onSubmit={handleSubmit}>
         <div className="formheading">Manager Sign Up</div>
+
         <div className="field">
           <label htmlFor="user">Username : </label>
           <input
@@ -82,6 +85,7 @@ const ManagerSignup = () => {
             required
           />
         </div>
+
         <div className="field">
           {" "}
           <label>Email : </label>
@@ -159,14 +163,14 @@ const ManagerSignup = () => {
         <div className="formbtns">
           <div className="field">
             {" "}
-            <button type="submit" className="submit-btn" onClick={handleSubmit}>
+            <button type="submit" className="submit-btn">
               Submit
             </button>
           </div>
 
           <div className="field">
             <button
-              type="submit"
+              type="button"
               className="submit-btn"
               onClick={() => {
                 setName("");
@@ -182,7 +186,7 @@ const ManagerSignup = () => {
             </button>
           </div>
         </div>
-      </div>
+      </form>
       <div className="signuppagelogin">
         <span>
           Have an account :{" "}

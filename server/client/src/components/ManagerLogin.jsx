@@ -24,7 +24,9 @@ const Login = () => {
     }
   }, [curruser, curruseremail, isuser, navigate, id]);
 
-  async function handleSubmit() {
+  async function handleSubmit(e) {
+    e.preventDefault();
+
     try {
       let result = await fetch(
         process.env.REACT_APP_Host_Api + "/api/manager/login",
@@ -44,15 +46,10 @@ const Login = () => {
         return;
       }
 
-      // window.localStorage.setItem("curruser", result.username);
-
       setId(result.managerId);
       setCurruseremail(result.email);
       setCurruser(result.username);
       setIsuser(false);
-
-      // console.log(curruseremail);
-      // console.log("Result name ", result);
 
       navigate(`/managerprofile/${result.managerId}`);
     } catch (e) {
@@ -62,8 +59,9 @@ const Login = () => {
 
   return (
     <div className="loginpage">
-      <div className="form">
+      <form className="form" onSubmit={handleSubmit}>
         <div className="formheading">Manager Log In</div>
+
         <div className="field">
           <label>Email : </label>
           <input
@@ -88,14 +86,14 @@ const Login = () => {
 
         <div className="formbtns">
           <div className="field">
-            <button type="submit" className="submit-btn" onClick={handleSubmit}>
+            <button type="submit" className="submit-btn">
               Submit
             </button>
           </div>
 
           <div className="field">
             <button
-              type="submit"
+              type="button"
               className="submit-btn"
               onClick={() => {
                 setEmail("");
@@ -108,7 +106,7 @@ const Login = () => {
 
           <div className="field">
             <button
-              type="submit"
+              type="button"
               className="submit-btn"
               onClick={() => navigate("/managerforgotpassword")}
             >
@@ -116,7 +114,7 @@ const Login = () => {
             </button>
           </div>
         </div>
-      </div>
+      </form>
 
       <div className="loginpagesignup">
         <span>

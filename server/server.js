@@ -34,8 +34,6 @@ app.use("/api/manager/", managerRoutes);
 app.use("/api/booking/", bookingRoutes);
 
 app.get("/profile", (req, res) => {
-  console.log("Got the request");
-
   try {
     const { token } = req.cookies;
 

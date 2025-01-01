@@ -25,7 +25,7 @@ const getBooking = async (req, res) => {
           return res.status(401).json({ error: "JWT error" });
         } else throw err2;
       }
-      // console.log("Token verified at /booked/:id");
+
 
       let bookingid = req.params.id1;
       let result = await Bookings.findOne({ _id: bookingid });

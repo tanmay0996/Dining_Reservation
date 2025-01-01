@@ -20,29 +20,32 @@ function BookTable() {
   async function payment() {
     const stripe = await loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
-    const res = await fetch(`${process.env.REACT_APP_Host_Api}/api/booking/payment`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        hotelname: hotel.name,
-        hotel,
-        tableSelected,
-        slotSelected,
-        curruseremail,
-        price:500,
-        image_url:`${hotel.image1}`,
-      }),
-      credentials: "include",
-    });
+    const res = await fetch(
+      `${process.env.REACT_APP_Host_Api}/api/booking/payment`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          hotelname: hotel.name,
+          hotel,
+          tableSelected,
+          slotSelected,
+          curruseremail,
+          price: 500,
+          image_url: `${hotel.image1}`,
+        }),
+        credentials: "include",
+      }
+    );
 
     if (!res.ok) {
       throw new Error(`Network response was not ok: ${res.statusText}`);
     }
 
     const session = await res.json();
-    
+
     const result = stripe.redirectToCheckout({
       sessionId: session.id,
     });

@@ -18,7 +18,9 @@ const Signup = () => {
     }
   }, [id, curruser, curruseremail, isuser, navigate]);
 
-  async function handleSubmit() {
+  async function handleSubmit(e) {
+    e.preventDefault();
+
     let result = await fetch(
       process.env.REACT_APP_Host_Api + "/api/user/signup",
       {
@@ -45,8 +47,9 @@ const Signup = () => {
 
   return (
     <div className="signuppage">
-      <div className="form">
+      <form className="form" onSubmit={handleSubmit}>
         <div className="formheading">User Sign Up</div>
+
         <div className="field">
           <label htmlFor="user">Username : </label>
           <input
@@ -57,6 +60,7 @@ const Signup = () => {
             required
           />
         </div>
+
         <div className="field">
           {" "}
           <label>Email : </label>
@@ -97,14 +101,14 @@ const Signup = () => {
         <div className="formbtns">
           <div className="field">
             {" "}
-            <button type="submit" className="submit-btn" onClick={handleSubmit}>
+            <button type="submit" className="submit-btn">
               Submit
             </button>
           </div>
 
           <div className="field">
             <button
-              type="submit"
+              type="button"
               className="submit-btn"
               onClick={() => {
                 setUsername("");
@@ -117,7 +121,8 @@ const Signup = () => {
             </button>
           </div>
         </div>
-      </div>
+      </form>
+
       <div className="signuppagelogin">
         <span>
           Have an account :{" "}

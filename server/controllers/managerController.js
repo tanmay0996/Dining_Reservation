@@ -346,7 +346,7 @@ const addHotel = async (req, res) => {
             lastupdated: currentDate,
           });
 
-          console.log("Final added before hotel, ");
+          console.log("Final added before hotel");
           result = await result.save();
 
           const hotelId = result._id;
@@ -355,15 +355,11 @@ const addHotel = async (req, res) => {
             const filename = req.files[fieldName][0].filename;
             const newFilename = `${hotelId}_${fieldName}.jpg`;
 
-            // console.log("Old name ", filename);
-            // console.log("New name ", newFilename);
-
             fs.rename(
               path.join(__dirname, "../uploads", filename),
               path.join(__dirname, "../uploads", newFilename),
               (err) => {
                 if (err) throw err;
-                // console.log(`${filename} renamed to ${newFilename}`);
               }
             );
 

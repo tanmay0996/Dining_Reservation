@@ -40,7 +40,9 @@ const AddHotel = () => {
     setImg2(file);
   };
 
-  async function handleSubmit() {
+  async function handleSubmit(e) {
+    e.preventDefault();
+
     try {
       let avg_cost1 = Number(avg_cost);
       let Phone1 = Number(Phone);
@@ -88,14 +90,15 @@ const AddHotel = () => {
 
   return (
     <div className="addhotelbackground">
-      <div className="addhotelform">
+      <form className="addhotelform" onSubmit={handleSubmit}>
         <div className="formheading">Add Your Hotel</div>
+
         <div className="field hotelname">
           <span>Hotel Name : </span>
           <input
             type="text"
             placeholder="Name"
-            // required
+            required
             value={name}
             onChange={(e) => {
               setname(e.target.value);
@@ -108,7 +111,7 @@ const AddHotel = () => {
           <input
             type="text"
             placeholder="Place, City"
-            // required
+            required
             value={address}
             onChange={(e) => {
               setAddress(e.target.value);
@@ -121,7 +124,7 @@ const AddHotel = () => {
           <input
             type="text"
             placeholder="Mon-Sun"
-            // required
+            required
             value={timeday}
             onChange={(e) => {
               setTimeday(e.target.value);
@@ -137,6 +140,7 @@ const AddHotel = () => {
             type="number"
             placeholder=""
             value={starttime}
+            required
             onChange={(e) => {
               setStarttime(e.target.value);
             }}
@@ -146,6 +150,7 @@ const AddHotel = () => {
             type="number"
             placeholder=""
             value={endtime}
+            required
             onChange={(e) => {
               setEndtime(e.target.value);
             }}
@@ -157,7 +162,7 @@ const AddHotel = () => {
           <input
             type="text"
             placeholder="Cuisines"
-            // required
+            required
             value={cuisines}
             onChange={(e) => {
               setCuisines(e.target.value);
@@ -171,7 +176,7 @@ const AddHotel = () => {
           <input
             type="number"
             placeholder="Avergae Cost"
-            // required
+            required
             value={avg_cost}
             onChange={(e) => {
               setavg_cost(e.target.value);
@@ -184,7 +189,7 @@ const AddHotel = () => {
           <input
             type="text"
             placeholder="Must Order"
-            // required
+            required
             value={Mustorder}
             onChange={(e) => {
               setMustorder(e.target.value);
@@ -197,7 +202,7 @@ const AddHotel = () => {
           <input
             type="text"
             placeholder="Mode of Payment"
-            // required
+            required
             value={ModeOfPayment}
             onChange={(e) => {
               setModeOfPayment(e.target.value);
@@ -211,7 +216,7 @@ const AddHotel = () => {
           <input
             type="number"
             placeholder="Ph. No."
-            // required
+            required
             value={Phone}
             onChange={(e) => {
               setPhone(e.target.value);
@@ -226,7 +231,7 @@ const AddHotel = () => {
           <input
             type="email"
             placeholder="Email"
-            // required
+            required
             value={Email}
             onChange={(e) => {
               setEmail(e.target.value);
@@ -240,7 +245,7 @@ const AddHotel = () => {
           <input
             type="text"
             placeholder="Full Address"
-            // required
+            required
             value={fulladdress}
             onChange={(e) => {
               setfulladdress(e.target.value);
@@ -254,7 +259,7 @@ const AddHotel = () => {
           <input
             type="number"
             placeholder="Tables"
-            // required
+            required
             value={no_of_tables}
             onChange={(e) => {
               setno_of_tables(e.target.value);
@@ -268,7 +273,7 @@ const AddHotel = () => {
           <input
             type="text"
             placeholder="Features"
-            // required
+            required
             value={Features}
             onChange={(e) => {
               setFeatures(e.target.value);
@@ -283,6 +288,7 @@ const AddHotel = () => {
             id="img1"
             name="img1"
             accept=".jpg, .jpeg, .png"
+            required
             onChange={onImg1Change}
           />
         </div>
@@ -294,22 +300,26 @@ const AddHotel = () => {
             id="img2"
             name="img2"
             accept=".jpg, .jpeg, .png"
+            required
             onChange={onImg2Change}
           />
         </div>
 
         <div className="formbtns">
-          <div className="hotelsubmitbtn" onClick={handleSubmit}>
-            <button>Submit</button>
+          <div className="hotelsubmitbtn">
+            <button type="submit">Submit</button>
           </div>
 
           <div className="hotelbackbtn">
-            <button onClick={() => navigate(`/managerprofile/${id}`)}>
+            <button
+              type="button"
+              onClick={() => navigate(`/managerprofile/${id}`)}
+            >
               Back
             </button>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 };

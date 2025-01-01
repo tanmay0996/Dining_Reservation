@@ -16,7 +16,9 @@ const Login = () => {
     }
   }, [id, curruser, curruseremail, isuser, navigate]);
 
-  async function handleSubmit() {
+  async function handleSubmit(e) {
+    e.preventDefault();
+
     let result = await fetch(
       process.env.REACT_APP_Host_Api + "/api/user/login",
       {
@@ -42,8 +44,9 @@ const Login = () => {
 
   return (
     <div className="loginpage">
-      <div className="form">
+      <form className="form" onSubmit={handleSubmit}>
         <div className="formheading">User Log In</div>
+
         <div className="field">
           <label>Email : </label>
           <input
@@ -65,15 +68,17 @@ const Login = () => {
             required
           />
         </div>
+
         <div className="formbtns">
           <div className="field">
-            <button type="submit" className="submit-btn" onClick={handleSubmit}>
+            <button type="submit" className="submit-btn">
               Submit
             </button>
           </div>
+
           <div className="field">
             <button
-              type="submit"
+              type="button"
               className="submit-btn"
               onClick={() => {
                 setEmail("");
@@ -86,7 +91,7 @@ const Login = () => {
 
           <div className="field">
             <button
-              type="submit"
+              type="button"
               className="submit-btn"
               onClick={() => navigate("/userforgotpassword")}
             >
@@ -94,7 +99,7 @@ const Login = () => {
             </button>
           </div>
         </div>
-      </div>
+      </form>
 
       <div className="loginpagesignup">
         <span>
