@@ -43,15 +43,17 @@ const Login = () => {
       result = await result.json();
       if (result.error) {
         alert(result.error);
+
+        if (result.donavigate & (result.donavigate === true)) navigate("/");
         return;
+      } else {
+        setId(result.managerId);
+        setCurruseremail(result.email);
+        setCurruser(result.username);
+        setIsuser(false);
+
+        navigate(`/managerprofile/${result.managerId}`);
       }
-
-      setId(result.managerId);
-      setCurruseremail(result.email);
-      setCurruser(result.username);
-      setIsuser(false);
-
-      navigate(`/managerprofile/${result.managerId}`);
     } catch (e) {
       console.log("Error : ", e);
     }

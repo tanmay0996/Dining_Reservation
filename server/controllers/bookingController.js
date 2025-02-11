@@ -26,20 +26,19 @@ const getBooking = async (req, res) => {
         } else throw err2;
       }
 
-
       let bookingid = req.params.id1;
       let result = await Bookings.findOne({ _id: bookingid });
 
       if (info2.userId === result.userId) {
-        res.status(200).json(result);
+        return res.status(200).json(result);
       } else {
         console.log("info2.userId !== result.userId");
-        res.status(401).json({ error: "Something went wrong" });
+        return res.status(401).json({ error: "Something went wrong" });
       }
     });
   } catch (e) {
     console.log(e);
-    res.status(500).json({ error: "Something Went Wrong" });
+    return res.status(500).json({ error: "Something Went Wrong" });
   }
 };
 
@@ -105,11 +104,11 @@ const Payment = async (req, res) => {
         sameSite: "None",
       });
 
-      res.status(200).json({ id: session.id });
+      return res.status(200).json({ id: session.id });
     });
   } catch (e) {
     console.error(e);
-    res.status(500).send("Internal Server Error");
+    return res.status(500).send("Internal Server Error");
   }
 };
 
@@ -164,10 +163,10 @@ const BookTable = async (req, res) => {
 
     let result2 = await booking.save();
 
-    res.status(200).json({ id: result2._id });
+    return res.status(200).json({ id: result2._id });
   } catch (e) {
     console.log(e);
-    res.status(500).json({ error: "Something Went Wrong" });
+    return res.status(500).json({ error: "Something Went Wrong" });
   }
 };
 

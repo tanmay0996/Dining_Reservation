@@ -15,6 +15,11 @@ const Hotels = require("../models/Hotels");
 
 const generatePassword = require("../utils/generatePassword");
 const makestring = require("../utils/makestring");
+const {
+  errorForUserSignUp,
+  errorForManagerSignUp,
+  errorForEmail,
+} = require("../utils/validationerrors");
 
 const managerSignup = async (req, res) => {
   try {
@@ -24,6 +29,17 @@ const managerSignup = async (req, res) => {
       return res.status(400).json({ error: "Fill Up the form" });
     }
 
+    const validationErrors = errorForManagerSignUp(req.body);
+
+    if (Object.keys(validationErrors).length > 0) {
+      let err;
+      if (validationErrors.email) err += validationErrors.email;
+      if (validationErrors.phn) err += validationErrors.phn + "\n";
+      if (validationErrors.aadhar) err += validationErrors.aadhar + "\n";
+      if (validationErrors.pan) err += validationErrors.pan + "\n";
+
+      return res.status(400).json({ error: err, donavigate: false });
+    }
     req.body.pwd = await generatePassword(req.body.pwd);
 
     let doexists = await Managers.findOne({ email });
@@ -31,6 +47,7 @@ const managerSignup = async (req, res) => {
       return res.status(400).json({ error: "Manager Exists" });
     }
 
+    req.body.newpan = req.body.newpan.toUpperCase();
     let manager = new Managers(req.body);
     let result = await manager.save();
 
@@ -56,7 +73,7 @@ const managerSignup = async (req, res) => {
         email: manager.email,
       });
   } catch (e) {
-    res.status(500).json({ error: "Something Went Wrong" });
+    return res.status(500).json({ error: "Something Went Wrong" });
   }
 };
 
@@ -65,6 +82,14 @@ const managerLogin = async (req, res) => {
     const { email, pwd } = req.body;
     if (!email || !pwd) {
       return res.status(400).json({ error: "Fill Up the form" });
+    }
+
+    const validationErrors = errorForEmail(email);
+
+    if (validationErrors?.email) {
+      return res
+        .status(400)
+        .json({ error: validationErrors.email, donavigate: false });
     }
 
     const manager = await Managers.findOne({ email });
@@ -101,16 +126,30 @@ const managerLogin = async (req, res) => {
       return res.status(404).json({ error: "Manager not found" });
     }
   } catch (e) {
-    res.status(500).json({ error: "Something Went Wrong" });
+    return res.status(500).json({ error: "Something Went Wrong" });
   }
 };
 
 const managerForgotPassword = async (req, res) => {
   try {
-    let { email, pwd } = req.body;
-    if (!email || !pwd) {
-      res.status(400).json({ error: "Fill up the Form" });
+    let { email, pwd, confirmpwd } = req.body;
+    if (!email || !pwd || !confirmpwd) {
+      return res.status(400).json({ error: "Fill up the Form" });
     } else {
+      const validationErrors = errorForEmail(email);
+
+      if (validationErrors?.email) {
+        return res
+          .status(400)
+          .json({ error: validationErrors.email, donavigate: false });
+      }
+
+      if (pwd !== confirmpwd)
+        return res.status(400).json({
+          error: "Entered Passwords are different",
+          donavigate: false,
+        });
+
       let manager = await Managers.findOne({ email });
 
       if (manager) {
@@ -124,14 +163,14 @@ const managerForgotPassword = async (req, res) => {
             },
           }
         );
-        res.status(200).json({ email: req.body.newemail });
+        return res.status(200).json({ email: req.body.newemail });
       } else {
-        res.status(400).json({ error: "Manager not Found" });
+        return res.status(400).json({ error: "Manager not Found" });
       }
     }
   } catch (e) {
     console.error("Error fetching user:", e);
-    res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -140,6 +179,40 @@ const Update_Manager_Info = async (req, res) => {
     const { token } = req.cookies;
     jwt.verify(token, managersecretKey, {}, async (err, info) => {
       if (err) throw err;
+
+      const { newname, curruseremail, newphn, newaddress, newaadhar, newpan } =
+        req.body;
+
+      if (
+        !newname ||
+        !curruseremail ||
+        !newphn ||
+        !newaddress ||
+        !newaadhar ||
+        !newpan
+      ) {
+        return res
+          .status(400)
+          .json({ error: "Fill Up the Form", donavigate: false });
+      }
+
+      const validationErrors = errorForManagerSignUp({
+        email: curruseremail,
+        phn: newphn,
+        address: newaddress,
+        aadhar: newaadhar,
+        pan: newpan,
+      });
+
+      if (Object.keys(validationErrors).length > 0) {
+        let err;
+        if (validationErrors.email) err += validationErrors.email;
+        if (validationErrors.phn) err += validationErrors.phn + "\n";
+        if (validationErrors.aadhar) err += validationErrors.aadhar + "\n";
+        if (validationErrors.pan) err += validationErrors.pan + "\n";
+
+        return res.status(400).json({ error: err, donavigate: false });
+      }
 
       let email = req.body.curruseremail;
       let manager = await Managers.findOne({ email });
@@ -197,7 +270,7 @@ const Update_Manager_Info = async (req, res) => {
     });
   } catch (e) {
     console.error("Error fetching user:", e);
-    res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -231,12 +304,12 @@ const get_ManagerInfo_and_HotelInfo = async (req, res) => {
           hotels = await Hotels.find({ managerId: manager._id });
         }
 
-        res.status(200).json({ manager, hotels });
+        return res.status(200).json({ manager, hotels });
       }
     });
   } catch (error) {
     console.error("Error fetching user:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -319,6 +392,19 @@ const addHotel = async (req, res) => {
             return res.status(400).json({ error: "Fill Up the form" });
           }
 
+          const validationErrors = errorForUserSignUp({
+            email: Email,
+            phn: Phone1,
+          });
+
+          if (Object.keys(validationErrors).length > 0) {
+            let err;
+            if (validationErrors.email) err += validationErrors.email;
+            if (validationErrors.phn) err += validationErrors.phn + "\n";
+
+            return res.status(400).json({ error: err, donavigate: false });
+          }
+
           let Available_Slots = makestring(starttime, endtime, no_of_tables1);
           let time = starttime.toString() + " - " + endtime.toString();
           let manager = await Managers.findOne({ email: curruseremail });
@@ -375,16 +461,16 @@ const addHotel = async (req, res) => {
           });
 
           console.log("Final added hotel, ");
-          res.status(200).json(result);
+          return res.status(200).json(result);
         } catch (e) {
           console.log("error : ", e);
-          res.status(400).json({ error: e });
+          return res.status(400).json({ error: e });
         }
       });
     });
   } catch (e) {
     console.log("error : ", e);
-    res.status(500).json({ error: "Something Went Wrong" });
+    return res.status(500).json({ error: "Something Went Wrong" });
   }
 };
 

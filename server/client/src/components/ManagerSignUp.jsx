@@ -57,17 +57,19 @@ const ManagerSignup = () => {
 
     if (result.error) {
       alert(result.error);
+
+      if (result.donavigate & (result.donavigate === true)) navigate("/");
       return;
+    } else {
+      window.localStorage.setItem("curruser", result.username);
+
+      setId(result.managerId);
+      setCurruser(result.managername);
+      setCurruseremail(result.email);
+      setIsuser(false);
+
+      navigate(`/managerprofile/${result.managerId}`);
     }
-
-    window.localStorage.setItem("curruser", result.username);
-
-    setId(result.managerId);
-    setCurruser(result.managername);
-    setCurruseremail(result.email);
-    setIsuser(false);
-
-    navigate(`/managerprofile/${result.managerId}`);
   }
 
   return (

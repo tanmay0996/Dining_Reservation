@@ -78,6 +78,8 @@ Stripe is used for secure payment transactions during the booking process.
 
 The project is deployed and accessible at: [https://hotel-dining-reservation-system.onrender.com/](https://hotel-dining-reservation-system.onrender.com/)
 
+The server take almost a minute to start.
+
 ## Contact 📞
 
 For queries or feedback, please contact the project owner at [1663ankesh@gmail.com](1663ankesh@gmail.com).

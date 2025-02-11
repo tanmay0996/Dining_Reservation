@@ -7,12 +7,26 @@ const Users = require("../models/Users");
 const Bookings = require("../models/Bookings");
 
 const generatePassword = require("../utils/generatePassword");
+const {
+  errorForUserSignUp,
+  errorForEmail,
+} = require("../utils/validationerrors");
 
 const userSignup = async (req, res) => {
   try {
     const { username, email, pwd, phn } = req.body;
     if (!username || !email || !phn || !pwd) {
       return res.status(400).json({ error: "Fill Up the form" });
+    }
+
+    const validationErrors = errorForUserSignUp(req.body);
+
+    if (Object.keys(validationErrors).length > 0) {
+      let err;
+      if (validationErrors.email) err += validationErrors.email;
+      if (validationErrors.phn) err += validationErrors.phn + "\n";
+
+      return res.status(400).json({ error: err, donavigate: false });
     }
 
     req.body.pwd = await generatePassword(pwd);
@@ -38,7 +52,7 @@ const userSignup = async (req, res) => {
       .json({ userId: user._id, username: user.username, email: user.email });
   } catch (e) {
     console.error("Error in user sign-up:", e);
-    res.status(500).json({ error: "Something Went Wrong" });
+    return res.status(500).json({ error: "Something Went Wrong" });
   }
 };
 
@@ -47,6 +61,14 @@ const userlogin = async (req, res) => {
     const { email, pwd } = req.body;
     if (!email || !pwd) {
       return res.status(400).json({ error: "Fill Up the form" });
+    }
+
+    const validationErrors = errorForEmail(email);
+
+    if (validationErrors?.email) {
+      return res
+        .status(400)
+        .json({ error: validationErrors.email, donavigate: false });
     }
 
     const user = await Users.findOne({ email });
@@ -80,17 +102,31 @@ const userlogin = async (req, res) => {
     }
   } catch (e) {
     console.log(e);
-    res.json({ error: "Something Went Wrong" });
+    return res.json({ error: "Something Went Wrong" });
   }
 };
 
 const userForgotPassword = async (req, res) => {
   try {
-    const { email, pwd } = req.body;
+    const { email, pwd, confirmpwd } = req.body;
 
-    if (!email || !pwd) {
+    if (!email || !pwd || !confirmpwd) {
       return res.status(400).json({ error: "Fill Up the form" });
     } else {
+      const validationErrors = errorForEmail(email);
+
+      if (validationErrors?.email) {
+        return res
+          .status(400)
+          .json({ error: validationErrors.email, donavigate: false });
+      }
+
+      if (pwd !== confirmpwd)
+        return res.status(400).json({
+          error: "Entered Passwords are different",
+          donavigate: false,
+        });
+
       let user = await Users.findOne({ email });
 
       if (user) {
@@ -104,14 +140,14 @@ const userForgotPassword = async (req, res) => {
             },
           }
         );
-        res.status(200).json({ email: req.body.newemail });
+        return res.status(200).json({ email: req.body.newemail });
       } else {
-        res.status(404).json({ error: "User Not Found" });
+        return res.status(404).json({ error: "User Not Found" });
       }
     }
   } catch (e) {
     console.error("Error fetching user:", e);
-    res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -129,11 +165,11 @@ const getUserInfo = async (req, res) => {
       let bookings = await Bookings.find({ email });
       bookings = bookings.reverse();
 
-      res.status(200).json({ user, bookings });
+      return res.status(200).json({ user, bookings });
     });
   } catch (error) {
     console.error("Error fetching user:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -144,6 +180,26 @@ const Update_User_Info = async (req, res) => {
     jwt.verify(token, secretKey, {}, async (err2, info2) => {
       if (err2) {
         throw err2;
+      }
+      const { newname, curruseremail, newphn } = req.body;
+
+      if (!newname || !curruseremail || !newphn) {
+        return res
+          .status(400)
+          .json({ error: "Fill Up the Form", donavigate: false });
+      }
+
+      const validationErrors = errorForUserSignUp({
+        email: curruseremail,
+        phn: newphn,
+      });
+
+      if (Object.keys(validationErrors).length > 0) {
+        let err;
+        if (validationErrors.email) err += validationErrors.email;
+        if (validationErrors.phn) err += validationErrors.phn + "\n";
+
+        return res.status(400).json({ error: err, donavigate: false });
       }
 
       let email = req.body.curruseremail;
@@ -191,7 +247,7 @@ const Update_User_Info = async (req, res) => {
     });
   } catch (e) {
     console.error("Error fetching user:", e);
-    res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -217,7 +273,7 @@ const user_Delete = async (req, res) => {
     });
   } catch (e) {
     console.log("Error:", e);
-    res.status(500).json({ Error: e });
+    return res.status(500).json({ Error: e });
   }
 };
 

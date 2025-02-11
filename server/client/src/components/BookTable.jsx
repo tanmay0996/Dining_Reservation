@@ -77,6 +77,26 @@ function BookTable() {
           Cancel Payment
         </button>
       </div>
+      <div className="regulations">
+        <div>
+          For successful payment, use Indian Card No.:{" "}
+          <span>4000 0035 6000 0008</span>
+        </div>
+        <div>
+          Due to some regulations, international cards will not be accepted
+          because the website is in developer mode.
+        </div>
+        <div>
+          For more info, you can visit{" "}
+          <a
+            href="https://docs.stripe.com/testing?testing-method=card-numbers#international-cards"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Stripe Website
+          </a>
+        </div>
+      </div>
     </div>
   );
 }

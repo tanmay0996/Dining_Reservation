@@ -21,12 +21,12 @@ const searchHotels = async (req, res) => {
     }
 
     if (hotels.length) {
-      res.status(200).json({ info: "hi", hotels });
+      return res.status(200).json({ info: "hi", hotels });
     } else {
-      res.status(400).json({ Error: "No hotel found" });
+      return res.status(400).json({ Error: "No hotel found" });
     }
   } catch (e) {
-    res.status(500).json({ error: "Something Went Wrong" });
+    return res.status(500).json({ error: "Something Went Wrong" });
   }
 };
 
@@ -41,10 +41,10 @@ const getHotelById = async (req, res) => {
 
     const result = select_tables_slots(hotel);
 
-    res.status(200).json(result);
+    return res.status(200).json(result);
   } catch (e) {
     console.log(e);
-    res.status(500).json({ error: "Something Went Wrong" });
+    return res.status(500).json({ error: "Something Went Wrong" });
   }
 };
 

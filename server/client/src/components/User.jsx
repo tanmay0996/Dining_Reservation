@@ -79,9 +79,16 @@ const User = () => {
     );
 
     result = await result.json();
-    alert("Profile Updated");
-    setToupdate(!toupdate);
-    setCurruser(result.name);
+    if (result.error) {
+      alert(result.error);
+      if (result.donavigate && result.donavigate === true) navigate("/");
+
+      return;
+    } else {
+      alert("Profile Updated");
+      setToupdate(!toupdate);
+      setCurruser(result.name);
+    }
   }
 
   async function deleteacc() {

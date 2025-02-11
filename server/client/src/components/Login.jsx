@@ -34,6 +34,7 @@ const Login = () => {
     result = await result.json();
     if (result.error) {
       alert(result.error);
+      if (result.donavigate & (result.donavigate === true)) navigate("/");
       return;
     }
 

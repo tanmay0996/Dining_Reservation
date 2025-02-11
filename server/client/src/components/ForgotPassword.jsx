@@ -8,6 +8,7 @@ const ForgotPassword = () => {
 
   const [email, setEmail] = useState("");
   const [pwd, setPwd] = useState("");
+  const [confirmpwd, setConfirmPwd] = useState("");
 
   useEffect(() => {
     if (curruser) {
@@ -22,7 +23,7 @@ const ForgotPassword = () => {
       process.env.REACT_APP_Host_Api + `/api/user/forgotpassword`,
       {
         method: "POST",
-        body: JSON.stringify({ email, pwd }),
+        body: JSON.stringify({ email, pwd, confirmpwd }),
         headers: {
           "Content-Type": "application/json",
         },
@@ -33,6 +34,8 @@ const ForgotPassword = () => {
     result = await result.json();
     if (result.error) {
       alert(result.error);
+
+      if (result.donavigate & (result.donavigate === true)) navigate("/");
       return;
     } else {
       alert("Password Changed");
@@ -63,6 +66,17 @@ const ForgotPassword = () => {
             placeholder="Enter Password"
             value={pwd}
             onChange={(e) => setPwd(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="field">
+          <label>Confirm Password : </label>
+          <input
+            type="password"
+            placeholder="Enter Password"
+            value={confirmpwd}
+            onChange={(e) => setConfirmPwd(e.target.value)}
             required
           />
         </div>
