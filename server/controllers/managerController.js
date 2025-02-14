@@ -20,6 +20,7 @@ const {
   errorForManagerSignUp,
   errorForEmail,
 } = require("../utils/validationerrors");
+const { sendOtp, verifyOtp } = require("../utils/otphandler");
 
 const managerSignup = async (req, res) => {
   try {
@@ -47,7 +48,6 @@ const managerSignup = async (req, res) => {
       return res.status(400).json({ error: "Manager Exists" });
     }
 
-    req.body.newpan = req.body.newpan.toUpperCase();
     let manager = new Managers(req.body);
     let result = await manager.save();
 
@@ -73,7 +73,45 @@ const managerSignup = async (req, res) => {
         email: manager.email,
       });
   } catch (e) {
+    console.log("Error: ", e);
     return res.status(500).json({ error: "Something Went Wrong" });
+  }
+};
+
+const managerGetOtp_signup = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: "Enter your email" });
+
+    let manager = await Managers.findOne({ email });
+
+    if (manager) return res.status(404).json({ error: "Manager Exists" });
+
+    const response = await sendOtp(email, "signup");
+    return res.status(200).json(response);
+  } catch (e) {
+    console.error("Error:", e);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const managerVerifyOtpController = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp)
+      return res.status(400).json({ error: "Email and OTP required" });
+
+    const otpResult = verifyOtp(email, otp);
+    if (!otpResult.success)
+      return res.status(400).json({ error: otpResult.error });
+
+    return res.status(200).json({
+      message: "OTP verified",
+    });
+  } catch (e) {
+    console.error("Error:", e);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -170,6 +208,23 @@ const managerForgotPassword = async (req, res) => {
     }
   } catch (e) {
     console.error("Error fetching user:", e);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const managerGetOtp_forgotpassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: "Enter your email" });
+
+    let manager = await Managers.findOne({ email });
+
+    if (!manager) return res.status(404).json({ error: "Manager Not Found" });
+
+    const response = await sendOtp(email, "forgotpassword");
+    return res.status(200).json(response);
+  } catch (e) {
+    console.error("Error:", e);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -476,8 +531,11 @@ const addHotel = async (req, res) => {
 
 module.exports = {
   managerSignup,
+  managerGetOtp_signup,
+  managerVerifyOtpController,
   managerLogin,
   managerForgotPassword,
+  managerGetOtp_forgotpassword,
   Update_Manager_Info,
   get_ManagerInfo_and_HotelInfo,
   addHotel,

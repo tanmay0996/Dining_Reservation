@@ -480,6 +480,7 @@ body {
 
 .loginpage .field input[type="password"],
 .loginpage .field input[type="email"],
+.loginpage .field input[type="text"],
 .signuppage .field input[type="text"],
 .signuppage .field input[type="number"],
 .signuppage .field input[type="password"],

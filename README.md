@@ -74,6 +74,14 @@ This is a MERN stack project designed to _manage hotel table bookings efficientl
 
 Stripe is used for secure payment transactions during the booking process.
 
+## OTP Verification System 🔑
+
+**User & Manager OTP Verification:**
+
+- OTP verification is implemented during **signup** to verify email authenticity.
+- **Forgot Password OTP Verification:** Users and managers must verify an OTP before resetting their passwords.
+- OTPs are sent via email and expire in **5 minutes** for security.
+
 ## Deployment 🚀
 
 The project is deployed and accessible at: [https://hotel-dining-reservation-system.onrender.com/](https://hotel-dining-reservation-system.onrender.com/)

@@ -11,6 +11,7 @@ const {
   errorForUserSignUp,
   errorForEmail,
 } = require("../utils/validationerrors");
+const { sendOtp, verifyOtp } = require("../utils/otphandler");
 
 const userSignup = async (req, res) => {
   try {
@@ -53,6 +54,43 @@ const userSignup = async (req, res) => {
   } catch (e) {
     console.error("Error in user sign-up:", e);
     return res.status(500).json({ error: "Something Went Wrong" });
+  }
+};
+
+const userGetOtp_signup = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: "Enter your email" });
+
+    let user = await Users.findOne({ email });
+
+    if (user) return res.status(404).json({ error: "User Exists" });
+
+    const response = await sendOtp(email, "signup");
+    return res.status(200).json(response);
+  } catch (e) {
+    console.error("Error:", e);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const userVerifyOtpController = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    if (!email || !otp)
+      return res.status(400).json({ error: "Email and OTP required" });
+
+    const otpResult = verifyOtp(email, otp);
+    if (!otpResult.success)
+      return res.status(400).json({ error: otpResult.error });
+
+    return res.status(200).json({
+      message: "OTP verified",
+    });
+  } catch (e) {
+    console.error("Error:", e);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
@@ -147,6 +185,23 @@ const userForgotPassword = async (req, res) => {
     }
   } catch (e) {
     console.error("Error fetching user:", e);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+const userGetOtp_forgotpassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: "Enter your email" });
+
+    let user = await Users.findOne({ email });
+
+    if (!user) return res.status(404).json({ error: "User Not Found" });
+
+    const response = await sendOtp(email, "forgotpassword");
+    return res.status(200).json(response);
+  } catch (e) {
+    console.error("Error:", e);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
@@ -279,9 +334,12 @@ const user_Delete = async (req, res) => {
 
 module.exports = {
   userSignup,
+  userGetOtp_signup,
+  userVerifyOtpController,
   userlogin,
   Update_User_Info,
   getUserInfo,
   userForgotPassword,
+  userGetOtp_forgotpassword,
   user_Delete,
 };
