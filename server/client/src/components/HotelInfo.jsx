@@ -208,9 +208,10 @@ const HotelInfo = () => {
                           key={index2}
                           className="slot"
                           value={vals}
-                          onClick={() => (
-                            setTableSelected(val), setSlotSelected(vals)
-                          )}
+                          onClick={() => {
+                            setTableSelected(val);
+                            setSlotSelected(vals);
+                          }}
                         >
                           {vals}
                         </div>

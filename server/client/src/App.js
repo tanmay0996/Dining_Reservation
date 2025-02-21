@@ -19,6 +19,7 @@ import ManagerForgotPassword from "./components/ManagerForgotPassword";
 import AddHotel from "./components/AddHotel";
 import UnsuccessfulPayment from "./components/UnsuccessfulPayment";
 import NotFound from "./components/NotFound";
+import ScrollTop from "./components/ScrollTop";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
       <BrowserRouter>
         <UserContextProvider>
           <Navbar />
+          <ScrollTop />
           <Routes>
             <Route path="/" element={<Homepage />} />
             <Route path="/usersignup" element={<SignUp />} />
