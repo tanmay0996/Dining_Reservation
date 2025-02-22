@@ -119,78 +119,121 @@ body {
   width: 30%;
   border-radius: 50%;
 }
-.hotelgroup {
-  margin: 10px 0;
-}
-.hoteldetails {
-  display: flex;
-  border: 4px solid whitesmoke;
-  margin: auto;
-  width: 80%;
-  margin-top: 20px;
-  border-radius: 20px;
-  background-color: whitesmoke;
-}
-.hoteldetails:hover {
-  background-color: rgb(70, 251, 230);
-  cursor: pointer;
-  border-color: black;
-  transition: 0.2s;
-}
-.hotelimage {
-  display: inline;
-  width: 200px;
-  border-radius: 20px;
-}
-.hotelinfo {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
-  justify-content: center;
-  width: 100%;
-  margin: 0 10px;
-  padding: 0 40px;
-  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-}
-.topblocks {
-  display: flex;
-  justify-content: space-between;
-}
-.name {
-  font-size: 40px;
-  font-weight: 800;
-}
-.address {
-  font-size: 20px;
-}
-.timeheading {
-  font-weight: bold;
-  text-align: center;
-  font-family: sans;
-}
-.timeday {
-  font-weight: bold;
-}
-.downblocks {
-  margin: 10px 0;
-  display: flex;
-  justify-content: space-between;
-}
-.downleft {
-  font-size: 18px;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-}
-.common {
-  margin: 2px 0;
-}
-.subheading {
-  font-weight: bold;
-}
 .icon {
   font-size: 500px;
   height: 200px;
 }
+.homepagebackground .hotelgroup {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  justify-content: center;
+}
+
+.homepagebackground .hoteldetails {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.homepagebackground .hoteldetails:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.2);
+}
+
+.homepagebackground .hotelimage {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+.homepagebackground .hotelinfo {
+  padding: 15px;
+}
+
+.homepagebackground .topblocks {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  font-family: "Times New Roman", Times, serif;
+}
+
+.homepagebackground .block1 .name {
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.homepagebackground .block1 .address {
+  font-size: 14px;
+  color: #666;
+  display: flex;
+  align-items: center;
+}
+
+.homepagebackground .block2 {
+  text-align: right;
+}
+
+.homepagebackground .timeheading {
+  font-size: 14px;
+  font-weight: bold;
+  color: #444;
+}
+
+.homepagebackground .time {
+  font-size: 13px;
+  color: #666;
+}
+
+.homepagebackground .downblocks {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  border-top: 1px solid #ddd;
+  padding-top: 10px;
+  margin-top: 10px;
+}
+
+.homepagebackground .downleft,
+.homepagebackground .downright {
+  flex: 1;
+}
+
+.homepagebackground .common {
+  font-size: 14px;
+  color: #444;
+  margin-bottom: 6px;
+}
+
+.homepagebackground .subheading {
+  font-weight: bold;
+  color: #222;
+}
+
+.homepagebackground .number,
+.homepagebackground .email {
+  font-size: 14px;
+  color: #444;
+}
+
+/* @media (max-width: 768px) {
+  .homepagebackground .hotelgroup {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+
+  .homepagebackground .downblocks {
+    flex-direction: column;
+  }
+} */
+
 .hoteldetails2 {
   display: flex;
   border: 4px solid whitesmoke;
@@ -1059,12 +1102,6 @@ input:disabled {
     justify-content: center;
     flex-wrap: wrap;
   }
-  .hoteldetails img {
-    margin: auto;
-    height: 200px;
-    width: 200px;
-    border: 4px double black;
-  }
   .hotelinfo {
     align-items: center;
     flex-direction: column;
@@ -1089,7 +1126,6 @@ input:disabled {
   .no_of_available_tables span {
     font-size: 20px;
   }
-  .topblocks,
   .downblocks {
     display: flex;
     flex-direction: column;
@@ -1219,6 +1255,9 @@ input:disabled {
   .plate {
     display: none;
   }
+  .hoteldetails {
+    width: 100%;
+  }
   .class1 {
     height: 250px;
     width: 100%;
@@ -1227,6 +1266,13 @@ input:disabled {
     width: 100%;
     font-size: 40px;
     align-items: center;
+  }
+  .homepagebackground .hotelgroup {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+
+  .homepagebackground .downblocks {
+    flex-direction: column;
   }
   .block1 div {
     font-size: 18px;
