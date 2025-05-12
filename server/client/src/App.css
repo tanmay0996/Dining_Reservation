@@ -1,5 +1,5 @@
 body {
-  background-color: rgb(247, 252, 145);
+  background-color: rgb(161, 210, 129);
   min-height: 100vh;
 }
 .homepagebackground,
@@ -10,7 +10,7 @@ body {
   margin: 0;
   position: sticky;
   top: 0;
-  background-color: rgb(238, 92, 76);
+  background-color: rgb(227, 76, 76);
   width: auto;
   height: auto;
   color: white;
@@ -83,7 +83,7 @@ body {
   padding-left: 20px;
 }
 .class1 {
-  background-image: url("./images/hotel background.jpg");
+  /* background-image: url("./images/hotel background.jpg"); */
   background-repeat: no-repeat;
   background-size: cover;
   opacity: 1;
